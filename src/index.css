@@ -479,6 +479,11 @@ a:focus-visible {
   background: var(--bg-card);
 }
 
+.workflow-choice.active {
+  border-color: #5c8995;
+  background: #22313c;
+}
+
 .dashboard-panel > .icon,
 .module-icon {
   display: grid;

@@ -1,64 +1,83 @@
-import { ArrowRight, BriefcaseBusiness, CalendarCheck, Home, Lightbulb, Megaphone, Users } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { LessonCard } from '../components/LessonCard'
+import { ModuleOverview } from '../components/ModuleOverview'
+import { WorkflowHarnessSelector } from '../components/WorkflowHarnessSelector'
+import { harnessMeta } from '../data/harnessMeta'
 import { lessonPath, lessonsForModule } from '../lib/courseNavigation'
-import type { Course } from '../types/course'
-
-const workflowIcons = [Home, Users, Lightbulb, BriefcaseBusiness, CalendarCheck, Megaphone]
+import type { Course, HarnessId } from '../types/course'
 
 export function WorkflowsPage({ course, completed }: { course: Course; completed: Set<string> }) {
-  const module = course.modules.find((candidate) => candidate.track === 'workflows')
-  const lessons = module ? lessonsForModule(course, module.id) : []
+  const { harnessSlug } = useParams()
+
+  if (!harnessSlug) {
+    return (
+      <div className="page-stack">
+        <section className="page-header workflow-playbook-header">
+          <span className="eyebrow">Harness-specific workflows</span>
+          <h1>Choose one harness before you start the playbook.</h1>
+          <p>
+            Each workflow track teaches the same business use cases through one selected harness only. Pick Codex,
+            Claude Cowork, OpenClaw, NemoClaw, or Hermes, then follow lessons that keep every step in that harness.
+          </p>
+        </section>
+
+        <WorkflowHarnessSelector course={course} completed={completed} />
+      </div>
+    )
+  }
+
+  const entry = Object.entries(harnessMeta).find(([, meta]) => meta.slug === harnessSlug)
+
+  if (!entry) {
+    return <Navigate to="/workflows" replace />
+  }
+
+  const [harnessId, meta] = entry as [HarnessId, (typeof harnessMeta)[HarnessId]]
+  const module = course.modules.find(
+    (candidate) => candidate.track === 'workflows' && candidate.harnessId === harnessId,
+  )
+
+  if (!module) {
+    return <Navigate to="/workflows" replace />
+  }
+
+  const lessons = lessonsForModule(course, module.id)
   const firstLesson = lessons[0]
 
   return (
     <div className="page-stack">
       <section className="page-header workflow-playbook-header">
-        <span className="eyebrow">Example workflows</span>
-        <h1>Client acquisition playbooks for people who do not want to become automation engineers.</h1>
-        <p>
-          Start with the plain-English path: offer, lead source, capture, draft, review, follow up, and measure. Then
-          go deeper with skill files, CRM fields, webhooks, approval rules, and audit logs when the manual version works.
-        </p>
-        {module && firstLesson && (
+        <Link className="inline-link" to="/workflows">
+          <ArrowLeft className="icon" />
+          Workflow harnesses
+        </Link>
+        <span className="eyebrow">Harness-specific workflows</span>
+        <h1>{meta.title} workflow playbooks</h1>
+        <p>{module.summary}</p>
+        {firstLesson && (
           <Link className="primary-button" to={lessonPath(module, firstLesson)}>
-            Start workflow playbook
+            Start {meta.title} workflows
             <ArrowRight className="icon" />
           </Link>
         )}
       </section>
 
-      <section className="workflow-card-grid">
-        {lessons.slice(1).map((lesson, index) => {
-          const Icon = workflowIcons[index % workflowIcons.length]
-          return (
-            <Link className="workflow-card" key={lesson.id} to={module ? lessonPath(module, lesson) : '/workflows'}>
-              <Icon className="icon" />
-              <div>
-                <h2>{lesson.title}</h2>
-                <p>{lesson.summary}</p>
-              </div>
-              <span className={completed.has(lesson.id) ? 'status done' : 'status'}>
-                {completed.has(lesson.id) ? 'Complete' : `${lesson.estimatedMinutes} min`}
-              </span>
-            </Link>
-          )
-        })}
-      </section>
+      <WorkflowHarnessSelector course={course} completed={completed} activeHarnessId={harnessId} />
 
-      {module && (
-        <section className="lesson-card-list">
-          {lessons.map((lesson, index) => (
-            <LessonCard
-              key={lesson.id}
-              module={module}
-              lesson={lesson}
-              index={index}
-              isComplete={completed.has(lesson.id)}
-            />
-          ))}
-        </section>
-      )}
+      <ModuleOverview course={course} module={module} completed={completed} />
+
+      <section className="lesson-card-list">
+        {lessons.map((lesson, index) => (
+          <LessonCard
+            key={lesson.id}
+            module={module}
+            lesson={lesson}
+            index={index}
+            isComplete={completed.has(lesson.id)}
+          />
+        ))}
+      </section>
     </div>
   )
 }

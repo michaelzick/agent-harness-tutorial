@@ -52,7 +52,7 @@ export interface WorkflowStep {
   title: string
   plainEnglish: string
   examplePrompt: string
-  bestHarness: string
+  harnessAction: string
 }
 
 export interface WorkflowMetric {
@@ -163,11 +163,12 @@ export type LessonSection =
   | {
       kind: 'workflowGuide'
       title: string
+      harnessName: string
       audience: string
       outcome: string
       requiredInputs: string[]
       steps: WorkflowStep[]
-      harnessRoles: string[]
+      operatingGuidance: string[]
       safetyGates: string[]
       followUpCadence: string[]
       successMetrics: WorkflowMetric[]

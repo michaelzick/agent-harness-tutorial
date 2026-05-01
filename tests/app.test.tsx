@@ -34,7 +34,7 @@ describe('Agentic Automation Tutor app', () => {
     expect(screen.getAllByText('Agent Files and Workspace Context').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Harness deep dives').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Skills and marketplaces').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Example workflows').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Harness workflows').length).toBeGreaterThan(0)
     expect(screen.getAllByText('CTO readiness').length).toBeGreaterThan(0)
   })
 
@@ -45,6 +45,7 @@ describe('Agentic Automation Tutor app', () => {
     expect(screen.getByText('Agentic automation course')).toBeInTheDocument()
     expect(screen.getAllByText('What Agentic Automation Actually Is').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Real Estate Agent Marketing and Outreach Funnel').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Codex Workflow Operating Model').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Build a Multi-Harness Agentic Automation System').length).toBeGreaterThan(0)
   })
 
@@ -146,21 +147,49 @@ describe('Agentic Automation Tutor app', () => {
     expect(screen.getAllByText('What an Interviewer Wants to Hear').length).toBeGreaterThan(0)
   })
 
-  it('renders workflow playbooks and workflow guide sections', () => {
+  it('renders workflow harness chooser and selected harness workflow pages', () => {
     window.history.pushState({}, '', '/workflows')
     const { unmount } = render(<App />)
 
-    expect(screen.getByText('Client acquisition playbooks for people who do not want to become automation engineers.')).toBeInTheDocument()
-    expect(screen.getAllByText('Real Estate Agent Marketing and Outreach Funnel').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Life Coach Consultation Funnel').length).toBeGreaterThan(0)
+    expect(screen.getByText('Choose one harness before you start the playbook.')).toBeInTheDocument()
+    expect(screen.getByText('Codex')).toBeInTheDocument()
+    expect(screen.getByText('Claude Cowork')).toBeInTheDocument()
+    expect(screen.getByText('OpenClaw')).toBeInTheDocument()
+    expect(screen.getByText('NemoClaw')).toBeInTheDocument()
+    expect(screen.getByText('Hermes')).toBeInTheDocument()
 
     unmount()
-    window.history.pushState({}, '', '/learn/example-workflows/real-estate-agent-marketing-and-outreach-funnel')
+    window.history.pushState({}, '', '/workflows/claude-cowork')
     render(<App />)
 
-    expect(screen.getByText('Real estate lead follow-up funnel')).toBeInTheDocument()
+    expect(screen.getByText('Claude Cowork workflow playbooks')).toBeInTheDocument()
+    expect(screen.getAllByText('Selected').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Claude Cowork Workflow Operating Model').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Real Estate Agent Marketing and Outreach Funnel').length).toBeGreaterThan(0)
+  })
+
+  it('renders harness-specific workflow guide sections without mixed harness labels', () => {
+    window.history.pushState(
+      {},
+      '',
+      '/learn/claude-cowork-workflows/real-estate-agent-marketing-and-outreach-funnel',
+    )
+    const { unmount } = render(<App />)
+
+    expect(screen.getByText('Real estate funnel with Claude Cowork')).toBeInTheDocument()
+    expect(screen.getByText('Claude Cowork is the only harness used in this guide.')).toBeInTheDocument()
     expect(screen.getByText('Inputs to collect before using agents')).toBeInTheDocument()
-    expect(screen.getAllByText(/Best harness:/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/Use Claude Cowork for this step:/i).length).toBeGreaterThan(0)
+    expect(screen.queryByText(/Best harness:/i)).not.toBeInTheDocument()
     expect(screen.getByText('Go deeper for technical operators')).toBeInTheDocument()
+
+    unmount()
+    window.history.pushState({}, '', '/learn/nemoclaw-workflows/life-coach-consultation-funnel')
+    render(<App />)
+
+    expect(screen.getByText('Life coach funnel with NemoClaw')).toBeInTheDocument()
+    expect(screen.getByText('NemoClaw is the only harness used in this guide.')).toBeInTheDocument()
+    expect(screen.getAllByText(/Use NemoClaw for this step:/i).length).toBeGreaterThan(0)
+    expect(screen.getByText('NemoClaw operating guidance')).toBeInTheDocument()
   })
 })

@@ -48,7 +48,7 @@ export function DashboardPage({
               <ArrowRight className="icon" />
             </Link>
             <Link className="secondary-button" to="/workflows">
-              Example workflows
+              Harness workflows
               <ArrowRight className="icon" />
             </Link>
           </div>
@@ -74,8 +74,8 @@ export function DashboardPage({
         </Link>
         <Link className="dashboard-panel" to="/workflows">
           <Route className="icon" />
-          <strong>Example workflows</strong>
-          <p>Step-by-step client acquisition playbooks for real estate, coaching, founders, consultants, local services, and creators.</p>
+          <strong>Harness workflows</strong>
+          <p>Choose one harness, then follow client-acquisition playbooks written only for that harness.</p>
         </Link>
         <Link className="dashboard-panel" to="/cto">
           <ShieldCheck className="icon" />

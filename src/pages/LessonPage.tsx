@@ -271,11 +271,12 @@ function LessonSectionRenderer({ section }: { section: LessonSection }) {
     return (
       <WorkflowGuide
         title={section.title}
+        harnessName={section.harnessName}
         audience={section.audience}
         outcome={section.outcome}
         requiredInputs={section.requiredInputs}
         steps={section.steps}
-        harnessRoles={section.harnessRoles}
+        operatingGuidance={section.operatingGuidance}
         safetyGates={section.safetyGates}
         followUpCadence={section.followUpCadence}
         successMetrics={section.successMetrics}

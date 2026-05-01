@@ -2,11 +2,12 @@ import type { WorkflowMetric, WorkflowStep } from '../types/course'
 
 export function WorkflowGuide({
   title,
+  harnessName,
   audience,
   outcome,
   requiredInputs,
   steps,
-  harnessRoles,
+  operatingGuidance,
   safetyGates,
   followUpCadence,
   successMetrics,
@@ -14,11 +15,12 @@ export function WorkflowGuide({
   sourceNote,
 }: {
   title: string
+  harnessName: string
   audience: string
   outcome: string
   requiredInputs: string[]
   steps: WorkflowStep[]
-  harnessRoles: string[]
+  operatingGuidance: string[]
   safetyGates: string[]
   followUpCadence: string[]
   successMetrics: WorkflowMetric[]
@@ -30,6 +32,7 @@ export function WorkflowGuide({
       <div>
         <span className="eyebrow">Example workflow</span>
         <h2>{title}</h2>
+        <p>{harnessName} is the only harness used in this guide.</p>
       </div>
 
       <div className="workflow-brief">
@@ -64,8 +67,8 @@ export function WorkflowGuide({
                 <pre className="prompt-block">{step.examplePrompt}</pre>
               </div>
               <div className="workflow-harness">
-                <strong>Best harness:</strong>
-                <span>{step.bestHarness}</span>
+                <strong>Use {harnessName} for this step:</strong>
+                <span>{step.harnessAction}</span>
               </div>
             </div>
           </article>
@@ -73,7 +76,7 @@ export function WorkflowGuide({
       </div>
 
       <div className="workflow-detail-grid">
-        <WorkflowList title="Harness roles" items={harnessRoles} />
+        <WorkflowList title={`${harnessName} operating guidance`} items={operatingGuidance} />
         <WorkflowList title="Safety gates" items={safetyGates} />
         <WorkflowList title="Follow-up cadence" items={followUpCadence} />
         <div className="mini-panel">

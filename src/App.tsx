@@ -69,6 +69,7 @@ function TutorApp() {
         <Route path="/harnesses/:harnessSlug" element={<HarnessDetailPage course={course} completed={completed} />} />
         <Route path="/skills" element={<SkillsPage course={course} completed={completed} />} />
         <Route path="/workflows" element={<WorkflowsPage course={course} completed={completed} />} />
+        <Route path="/workflows/:harnessSlug" element={<WorkflowsPage course={course} completed={completed} />} />
         <Route path="/cto" element={<CtoPage course={course} completed={completed} />} />
         <Route path="/diagrams" element={<DiagramGalleryPage />} />
         <Route
