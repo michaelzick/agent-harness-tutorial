@@ -13,7 +13,14 @@ export function ProgressBar({
   return (
     <div className={className}>
       {label && <span>{label}</span>}
-      <div className="progress-track" aria-label={`${safePercent}% complete`}>
+      <div
+        className="progress-track"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={safePercent}
+        aria-label={label ?? `${safePercent}% complete`}
+      >
         <div style={{ width: `${safePercent}%` }} />
       </div>
     </div>

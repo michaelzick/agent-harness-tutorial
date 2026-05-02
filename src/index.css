@@ -54,6 +54,13 @@
 
 html {
   background: var(--bg-app);
+  scroll-behavior: smooth;
+}
+
+.lesson-section-anchor,
+.lesson-section[id],
+.lesson-main section[id] {
+  scroll-margin-top: 1.5rem;
 }
 
 body {

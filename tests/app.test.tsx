@@ -28,14 +28,14 @@ describe('Agentic Automation Tutor app', () => {
   it('renders the dashboard and course modules', () => {
     render(<App />)
 
-    expect(screen.getByText('Agentic Automation Tutor')).toBeInTheDocument()
-    expect(screen.getByText('Learn to design useful agents, not vague autonomy.')).toBeInTheDocument()
+    expect(screen.getByText('Agentic Automation')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: /Design useful agents,\s*not vague autonomy\./ }),
+    ).toBeInTheDocument()
     expect(screen.getAllByText('Foundations').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Agent Files and Workspace Context').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Harness deep dives').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Skills and marketplaces').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Harness workflows').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('CTO readiness').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Skills, Marketplaces, and Custom Skill Creation').length).toBeGreaterThan(0)
+    expect(screen.getByRole('heading', { level: 2, name: 'Course path' })).toBeInTheDocument()
   })
 
   it('renders the lesson path grouped by module', () => {
@@ -54,8 +54,10 @@ describe('Agentic Automation Tutor app', () => {
 
     render(<App />)
 
-    expect(screen.getByText('0% complete')).toBeInTheDocument()
-    expect(screen.getByText('Learn to design useful agents, not vague autonomy.')).toBeInTheDocument()
+    expect(screen.getAllByText(/0%/).length).toBeGreaterThan(0)
+    expect(
+      screen.getByRole('heading', { level: 1, name: /Design useful agents,\s*not vague autonomy\./ }),
+    ).toBeInTheDocument()
   })
 
   it('marks lesson completion and persists it', () => {
@@ -108,7 +110,9 @@ describe('Agentic Automation Tutor app', () => {
     window.history.pushState({}, '', '/harnesses')
     render(<App />)
 
-    expect(screen.getByText('Learn each harness in its own lane.')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Each harness in its own lane.' }),
+    ).toBeInTheDocument()
     expect(screen.getByText('Codex')).toBeInTheDocument()
     expect(screen.getByText('Claude Cowork')).toBeInTheDocument()
     expect(screen.getByText('NemoClaw')).toBeInTheDocument()
@@ -127,9 +131,9 @@ describe('Agentic Automation Tutor app', () => {
     window.history.pushState({}, '', '/learn/codex-dedicated-section/install-and-set-up-codex')
     render(<App />)
 
-    expect(screen.getByText('Codex setup lab')).toBeInTheDocument()
+    expect(screen.getAllByText('Codex setup lab').length).toBeGreaterThan(0)
     expect(screen.getByText('npm i -g @openai/codex')).toBeInTheDocument()
-    expect(screen.getByText('Codex `AGENTS.md` starter')).toBeInTheDocument()
+    expect(screen.getAllByText('Codex `AGENTS.md` starter').length).toBeGreaterThan(0)
   })
 
   it('renders the skills and CTO routes', () => {
@@ -176,7 +180,7 @@ describe('Agentic Automation Tutor app', () => {
     )
     const { unmount } = render(<App />)
 
-    expect(screen.getByText('Real estate funnel with Claude Cowork')).toBeInTheDocument()
+    expect(screen.getAllByText('Real estate funnel with Claude Cowork').length).toBeGreaterThan(0)
     expect(screen.getByText('Claude Cowork is the only harness used in this guide.')).toBeInTheDocument()
     expect(screen.getByText('Inputs to collect before using agents')).toBeInTheDocument()
     expect(screen.getAllByText(/Use Claude Cowork for this step:/i).length).toBeGreaterThan(0)
@@ -187,7 +191,7 @@ describe('Agentic Automation Tutor app', () => {
     window.history.pushState({}, '', '/learn/nemoclaw-workflows/life-coach-consultation-funnel')
     render(<App />)
 
-    expect(screen.getByText('Life coach funnel with NemoClaw')).toBeInTheDocument()
+    expect(screen.getAllByText('Life coach funnel with NemoClaw').length).toBeGreaterThan(0)
     expect(screen.getByText('NemoClaw is the only harness used in this guide.')).toBeInTheDocument()
     expect(screen.getAllByText(/Use NemoClaw for this step:/i).length).toBeGreaterThan(0)
     expect(screen.getByText('NemoClaw operating guidance')).toBeInTheDocument()

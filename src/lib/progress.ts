@@ -82,7 +82,14 @@ export function readProgress(lessons: Lesson[], modules: CourseModule[]): Progre
 }
 
 export function writeProgress(progress: ProgressState) {
-  window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress))
+  if (typeof window === 'undefined') {
+    return
+  }
+  try {
+    window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress))
+  } catch {
+    // Quota exceeded, private mode, or storage disabled — fail open: in-memory state is still consistent.
+  }
 }
 
 export function calculatePercentComplete(progress: ProgressState, lessons: Lesson[]) {

@@ -27,19 +27,24 @@ export function Checkpoint({
     <section className="side-rail-block checkpoint-card">
       <div className="side-rail-label">Checkpoint</div>
       <p>{checkpoint.prompt}</p>
-      <div className="checkpoint-options">
+      <div className="checkpoint-options" role="group" aria-label="Checkpoint options">
         {checkpoint.options.map((option) => (
           <button
             className={selectedId === option.id ? 'selected' : undefined}
             key={option.id}
             type="button"
+            aria-pressed={selectedId === option.id}
             onClick={() => handleAnswer(option.id)}
           >
             {option.text}
           </button>
         ))}
       </div>
-      {message && <p className="checkpoint-result">{message}</p>}
+      {message && (
+        <p className="checkpoint-result" role="status" aria-live="polite">
+          {message}
+        </p>
+      )}
       {savedResult !== undefined && (
         <p className="quiet">Saved result: {savedResult ? 'passed' : 'needs review'}</p>
       )}

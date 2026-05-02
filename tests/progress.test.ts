@@ -1,11 +1,15 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { course } from '../src/data/course'
 import {
   calculatePercentComplete,
   completeLesson,
   createEmptyProgress,
   normalizeProgress,
+  PROGRESS_STORAGE_KEY,
+  readProgress,
   recordCheckpoint,
+  visitLesson,
+  writeProgress,
 } from '../src/lib/progress'
 
 describe('progress storage model', () => {
@@ -57,5 +61,56 @@ describe('progress storage model', () => {
 
     expect(withCheckpoint.completedLessonIds).toEqual([lesson.id])
     expect(withCheckpoint.checkpointResults[lesson.checkpoint.id]).toBe(true)
+  })
+
+  it('treats a lesson as completed only once even if marked twice', () => {
+    const lesson = course.lessons[0]
+    const once = completeLesson(createEmptyProgress(), lesson)
+    const twice = completeLesson(once, lesson)
+    expect(twice.completedLessonIds).toEqual([lesson.id])
+  })
+
+  it('updates the current lesson and module when visiting a lesson', () => {
+    const lesson = course.lessons[1]
+    const next = visitLesson(createEmptyProgress(), lesson)
+    expect(next.currentLessonId).toBe(lesson.id)
+    expect(next.currentModuleId).toBe(lesson.moduleId)
+    expect(next.completedLessonIds).toEqual([])
+  })
+
+  it('returns 0% complete when no lessons exist', () => {
+    expect(calculatePercentComplete(createEmptyProgress(), [])).toBe(0)
+  })
+
+  it('round-trips through localStorage', () => {
+    const lesson = course.lessons[0]
+    const initial = completeLesson(createEmptyProgress(), lesson)
+    writeProgress(initial)
+
+    const restored = readProgress(course.lessons, course.modules)
+    expect(restored.completedLessonIds).toEqual([lesson.id])
+    expect(restored.currentLessonId).toBe(lesson.id)
+  })
+})
+
+describe('writeProgress error handling', () => {
+  afterEach(() => {
+    window.localStorage.clear()
+    vi.restoreAllMocks()
+  })
+
+  it('does not throw when localStorage refuses the write', () => {
+    vi.spyOn(window.localStorage.__proto__, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError')
+    })
+
+    expect(() => writeProgress(createEmptyProgress())).not.toThrow()
+  })
+
+  it('survives malformed JSON without crashing readProgress', () => {
+    window.localStorage.setItem(PROGRESS_STORAGE_KEY, '{not valid')
+    const recovered = readProgress(course.lessons, course.modules)
+    expect(recovered.completedLessonIds).toEqual([])
+    expect(recovered.checkpointResults).toEqual({})
   })
 })

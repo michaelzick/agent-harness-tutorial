@@ -1,8 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { diagramById } from '../data/diagrams'
 import type { Course, LessonSection } from '../types/course'
-import { adjacentLessons, findLessonRef, findModuleForLesson, lessonPath, lessonsForModule } from '../lib/courseNavigation'
+import {
+  adjacentLessons,
+  findLessonRef,
+  findModuleForLesson,
+  lessonPath,
+  lessonsForModule,
+} from '../lib/courseNavigation'
+import { slugify } from '../lib/slug'
 import { ReactFlowDiagram } from '../components/ReactFlowDiagram'
 import { ComparisonTable } from '../components/ComparisonTable'
 import { GoodBadExample } from '../components/GoodBadExample'
@@ -18,6 +25,12 @@ import { ImplementationLab } from '../components/ImplementationLab'
 import { FileTemplate } from '../components/FileTemplate'
 import { DecisionChecklist } from '../components/DecisionChecklist'
 import { WorkflowGuide } from '../components/WorkflowGuide'
+
+const PRACTICAL_EXAMPLE = 'Practical example'
+const HARNESS_RELEVANCE = 'Harness-specific relevance'
+const COMMON_MISTAKES = 'Common mistakes'
+
+type TocItem = { title: string; slug: string }
 
 export function LessonPage({
   course,
@@ -107,23 +120,29 @@ export function LessonPage({
             </section>
           )}
 
-          {lesson.sections.map((section, index) => (
-            <LessonSectionRenderer key={`${lesson.id}-${index}`} section={section} />
-          ))}
+          {lesson.sections.map((section, index) => {
+            const heading = sectionHeading(section)
+            const id = heading ? slugify(heading) : undefined
+            return (
+              <div id={id} key={`${lesson.id}-${index}`} className="lesson-section-anchor">
+                <LessonSectionRenderer section={section} />
+              </div>
+            )
+          })}
 
-          <section className="lesson-section">
-            <h2>Practical example</h2>
+          <section className="lesson-section" id={slugify(PRACTICAL_EXAMPLE)}>
+            <h2>{PRACTICAL_EXAMPLE}</h2>
             <p>{lesson.practicalExample}</p>
           </section>
 
-          <section className="lesson-section">
-            <h2>Harness-specific relevance</h2>
+          <section className="lesson-section" id={slugify(HARNESS_RELEVANCE)}>
+            <h2>{HARNESS_RELEVANCE}</h2>
             <p>{lesson.harnessRelevance}</p>
           </section>
 
           {lesson.commonMistakes.length > 0 && (
-            <section className="lesson-section">
-              <h2>Common mistakes</h2>
+            <section className="lesson-section" id={slugify(COMMON_MISTAKES)}>
+              <h2>{COMMON_MISTAKES}</h2>
               <ul className="mistake-list">
                 {lesson.commonMistakes.map((mistake) => (
                   <li key={mistake}>{mistake}</li>
@@ -132,7 +151,7 @@ export function LessonPage({
             </section>
           )}
 
-          <nav className="lesson-footer-nav">
+          <nav className="lesson-footer-nav" aria-label="Lesson navigation">
             {previous && previousModule ? (
               <Link to={lessonPath(previousModule, previous)} className="prev">
                 <span className="kicker">Previous</span>
@@ -157,20 +176,7 @@ export function LessonPage({
 
         <aside className="lesson-side">
           {tocItems.length > 0 && (
-            <div className="side-rail-block">
-              <div className="side-rail-label">On this page</div>
-              <div className="toc">
-                {tocItems.map((item, index) => (
-                  <a
-                    key={item.title}
-                    href={`#${slugify(item.title)}`}
-                    className={index === 0 ? 'active' : undefined}
-                  >
-                    {item.title}
-                  </a>
-                ))}
-              </div>
-            </div>
+            <LessonToc key={lesson.id} items={tocItems} />
           )}
 
           {lesson.keyConcepts.length > 0 && (
@@ -209,17 +215,71 @@ export function LessonPage({
   )
 }
 
-function collectTocItems(lesson: { sections: LessonSection[] }) {
-  const items: Array<{ title: string }> = []
-  lesson.sections.forEach((section) => {
-    const title = sectionHeading(section)
-    if (title) {
-      items.push({ title })
+function LessonToc({ items }: { items: TocItem[] }) {
+  const [activeSlug, setActiveSlug] = useState<string>(items[0]?.slug ?? '')
+
+  function handleClick(event: React.MouseEvent<HTMLAnchorElement>, slug: string) {
+    const target = document.getElementById(slug)
+    if (!target) {
+      return
     }
-  })
-  items.push({ title: 'Practical example' })
-  items.push({ title: 'Harness-specific relevance' })
-  items.push({ title: 'Common mistakes' })
+    event.preventDefault()
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    history.replaceState(null, '', `#${slug}`)
+    setActiveSlug(slug)
+  }
+
+  return (
+    <div className="side-rail-block">
+      <div className="side-rail-label">On this page</div>
+      <nav className="toc" aria-label="On this page">
+        {items.map((item) => (
+          <a
+            key={item.slug}
+            href={`#${item.slug}`}
+            className={item.slug === activeSlug ? 'active' : undefined}
+            onClick={(event) => handleClick(event, item.slug)}
+          >
+            {item.title}
+          </a>
+        ))}
+      </nav>
+    </div>
+  )
+}
+
+function collectTocItems(lesson: {
+  sections: LessonSection[]
+  practicalExample: string
+  harnessRelevance: string
+  commonMistakes: string[]
+}): TocItem[] {
+  const items: TocItem[] = []
+  const seen = new Set<string>()
+
+  function push(title: string | null) {
+    if (!title) {
+      return
+    }
+    const slug = slugify(title)
+    if (!slug || seen.has(slug)) {
+      return
+    }
+    seen.add(slug)
+    items.push({ title, slug })
+  }
+
+  lesson.sections.forEach((section) => push(sectionHeading(section)))
+  if (lesson.practicalExample) {
+    push(PRACTICAL_EXAMPLE)
+  }
+  if (lesson.harnessRelevance) {
+    push(HARNESS_RELEVANCE)
+  }
+  if (lesson.commonMistakes.length > 0) {
+    push(COMMON_MISTAKES)
+  }
+
   return items
 }
 
@@ -241,17 +301,10 @@ function sectionHeading(section: LessonSection): string | null {
   return null
 }
 
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-}
-
 function LessonSectionRenderer({ section }: { section: LessonSection }) {
   if (section.kind === 'text') {
     return (
-      <section className="lesson-section" id={slugify(section.heading)}>
+      <section className="lesson-section">
         <h2>{section.heading}</h2>
         <p>{section.body}</p>
         {section.bullets && (
@@ -292,7 +345,7 @@ function LessonSectionRenderer({ section }: { section: LessonSection }) {
 
   if (section.kind === 'prompt') {
     return (
-      <section className="lesson-section" id={slugify(section.title)}>
+      <section className="lesson-section">
         <h2>{section.title}</h2>
         <pre className="prompt-block">{section.body}</pre>
       </section>
