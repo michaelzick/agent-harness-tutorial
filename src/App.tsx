@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { CourseLayout } from './components/CourseLayout'
 import { course, lessonById } from './data/course'
-import { findLessonById } from './lib/courseNavigation'
 import { useProgress } from './hooks/useProgress'
 import { DashboardPage } from './pages/DashboardPage'
 import { DiagramGalleryPage } from './pages/DiagramGalleryPage'
@@ -32,8 +31,6 @@ function TutorApp() {
     resetProgress,
   } = useProgress(course.lessons, course.modules)
 
-  const activeLesson = findLessonById(course, progress.currentLessonId)
-
   const handleVisit = useCallback(
     (lessonId: string) => {
       const lesson = lessonById.get(lessonId)
@@ -59,7 +56,6 @@ function TutorApp() {
       course={course}
       progress={progress}
       completed={completed}
-      activeLesson={activeLesson}
       onResetProgress={resetProgress}
     >
       <Routes>

@@ -1,24 +1,21 @@
 import { BookOpenCheck, Boxes, BrainCircuit, GitBranch, LayoutDashboard, Route, ShieldCheck } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import type { Course, Lesson, ProgressState } from '../types/course'
+import type { Course, ProgressState } from '../types/course'
 import { calculatePercentComplete } from '../lib/progress'
 import { ProgressBar } from './ProgressBar'
 import { ResetProgressButton } from './ResetProgressButton'
-import { LessonSidebar } from './LessonSidebar'
 
 export function CourseLayout({
   course,
   progress,
   completed,
-  activeLesson,
   onResetProgress,
   children,
 }: {
   course: Course
   progress: ProgressState
   completed: Set<string>
-  activeLesson: Lesson | null
   onResetProgress: () => void
   children: ReactNode
 }) {
@@ -80,8 +77,6 @@ export function CourseLayout({
           <p>Last visit: {formatDate(progress.lastVisitedAt)}</p>
           <ResetProgressButton onReset={onResetProgress} />
         </section>
-
-        <LessonSidebar course={course} activeLesson={activeLesson} completed={completed} />
       </aside>
 
       <main className="main-shell">{children}</main>

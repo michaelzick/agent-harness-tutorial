@@ -25,7 +25,7 @@ function node(input: DiagramNodeInput): Node {
   return {
     id: input.id,
     position: { x: input.x, y: input.y },
-    data: { label: input.label },
+    data: { label: input.label, accent: tone.border },
     style: {
       width: input.width ?? 170,
       minHeight: 54,
