@@ -53,6 +53,10 @@ export function LessonPage({
   const lessonId = ref?.lesson.id
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [lessonId])
+
+  useEffect(() => {
     if (lessonId) {
       onVisit(lessonId)
     }
