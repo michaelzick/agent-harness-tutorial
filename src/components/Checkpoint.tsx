@@ -1,4 +1,3 @@
-import { CheckCircle2 } from 'lucide-react'
 import { useState } from 'react'
 import type { Checkpoint as CheckpointType } from '../types/course'
 
@@ -25,11 +24,8 @@ export function Checkpoint({
   }
 
   return (
-    <section className="side-card checkpoint-card">
-      <div className="panel-title">
-        <CheckCircle2 className="icon" />
-        Checkpoint
-      </div>
+    <section className="side-rail-block checkpoint-card">
+      <div className="side-rail-label">Checkpoint</div>
       <p>{checkpoint.prompt}</p>
       <div className="checkpoint-options">
         {checkpoint.options.map((option) => (

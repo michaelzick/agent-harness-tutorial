@@ -1,9 +1,8 @@
-import { ArrowLeft, CheckCircle2 } from 'lucide-react'
 import { useEffect } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { diagramById } from '../data/diagrams'
 import type { Course, LessonSection } from '../types/course'
-import { adjacentLessons, findLessonRef, findModuleForLesson, lessonPath } from '../lib/courseNavigation'
+import { adjacentLessons, findLessonRef, findModuleForLesson, lessonPath, lessonsForModule } from '../lib/courseNavigation'
 import { ReactFlowDiagram } from '../components/ReactFlowDiagram'
 import { ComparisonTable } from '../components/ComparisonTable'
 import { GoodBadExample } from '../components/GoodBadExample'
@@ -11,7 +10,6 @@ import { KeyConceptCallout } from '../components/KeyConceptCallout'
 import { MistakeCallout } from '../components/MistakeCallout'
 import { CapstoneProject } from '../components/CapstoneProject'
 import { Checkpoint } from '../components/Checkpoint'
-import { NextLessonButton } from '../components/NextLessonButton'
 import { SetupGuide } from '../components/SetupGuide'
 import { FeatureMatrix } from '../components/FeatureMatrix'
 import { SkillRecipe } from '../components/SkillRecipe'
@@ -55,108 +53,205 @@ export function LessonPage({
   const diagram = lesson.diagramId ? diagramById.get(lesson.diagramId) : null
   const { previous, next } = adjacentLessons(course, lesson)
   const previousModule = previous ? findModuleForLesson(course, previous) : null
+  const nextModule = next ? findModuleForLesson(course, next) : null
   const isComplete = completed.has(lesson.id)
 
+  const moduleIndex = course.modules.findIndex((candidate) => candidate.id === module.id) + 1
+  const moduleLessons = lessonsForModule(course, module.id)
+  const lessonIndex = moduleLessons.findIndex((candidate) => candidate.id === lesson.id) + 1
+  const moduleProgressDone = moduleLessons.filter((candidate) => completed.has(candidate.id)).length
+
+  const tocItems = collectTocItems(lesson)
+
   return (
-    <div className="lesson-layout">
-      <article className="lesson-main">
-        <div className="lesson-kicker">
-          <Link to="/lessons">
-            <ArrowLeft className="icon" />
-            Lesson path
-          </Link>
-          <span className={isComplete ? 'status done' : 'status'}>
-            <CheckCircle2 className="icon" />
-            {isComplete ? 'Complete' : 'In progress'}
-          </span>
-        </div>
+    <div className="page-stack">
+      <div className="top-bar">
+        <span className="crumbs">
+          Lessons / Module {String(moduleIndex).padStart(2, '0')} / {String(lessonIndex).padStart(2, '0')}
+        </span>
+        <span className="top-meta">
+          {lesson.estimatedMinutes} MIN · {isComplete ? 'COMPLETE' : 'IN PROGRESS'}
+        </span>
+      </div>
 
-        <header className="lesson-header">
-          <span className="eyebrow">{module.title}</span>
-          <h1>{lesson.title}</h1>
-          <p>{lesson.summary}</p>
-        </header>
+      <div className="lesson-layout">
+        <article className="lesson-main">
+          <header className="lesson-header">
+            <span className="eyebrow">
+              Module {String(moduleIndex).padStart(2, '0')} · {module.title}
+            </span>
+            <h1>{lesson.title}</h1>
+            <p>{lesson.summary}</p>
+          </header>
 
-        {diagram && <ReactFlowDiagram diagram={diagram} />}
-
-        <section className="lesson-section">
-          <h2>Learning objectives</h2>
-          <ul>
-            {lesson.objectives.map((objective) => (
-              <li key={objective}>{objective}</li>
-            ))}
-          </ul>
-        </section>
-
-        {lesson.sections.map((section, index) => (
-          <LessonSectionRenderer key={`${lesson.id}-${index}`} section={section} />
-        ))}
-
-        <section className="lesson-section">
-          <h2>Practical example</h2>
-          <p>{lesson.practicalExample}</p>
-        </section>
-
-        <section className="lesson-section">
-          <h2>Harness-specific relevance</h2>
-          <p>{lesson.harnessRelevance}</p>
-        </section>
-
-        <section className="lesson-section">
-          <h2>Common mistakes</h2>
-          <ul className="mistake-list">
-            {lesson.commonMistakes.map((mistake) => (
-              <li key={mistake}>{mistake}</li>
-            ))}
-          </ul>
-        </section>
-
-        <div className="lesson-footer-nav">
-          {previous && previousModule ? (
-            <Link className="secondary-button" to={lessonPath(previousModule, previous)}>
-              <ArrowLeft className="icon" />
-              Previous
-            </Link>
-          ) : (
-            <span />
+          {lesson.objectives.length > 0 && (
+            <section className="lesson-objectives">
+              <div className="lesson-objectives-label">Objectives</div>
+              <ol>
+                {lesson.objectives.map((objective, index) => (
+                  <li key={objective}>
+                    <span className="lesson-objectives-num">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="lesson-objectives-text">{objective}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
           )}
-          <NextLessonButton course={course} next={next} />
-        </div>
-      </article>
 
-      <aside className="lesson-side">
-        <section className="side-card">
-          <div className="panel-title">Key concepts</div>
-          <div className="tag-list">
-            {lesson.keyConcepts.map((concept) => (
-              <span key={concept}>{concept}</span>
-            ))}
+          {diagram && (
+            <section className="diagram-panel">
+              <div className="diagram-header">
+                <h2>{diagram.title}</h2>
+              </div>
+              <ReactFlowDiagram diagram={diagram} />
+            </section>
+          )}
+
+          {lesson.sections.map((section, index) => (
+            <LessonSectionRenderer key={`${lesson.id}-${index}`} section={section} />
+          ))}
+
+          <section className="lesson-section">
+            <h2>Practical example</h2>
+            <p>{lesson.practicalExample}</p>
+          </section>
+
+          <section className="lesson-section">
+            <h2>Harness-specific relevance</h2>
+            <p>{lesson.harnessRelevance}</p>
+          </section>
+
+          {lesson.commonMistakes.length > 0 && (
+            <section className="lesson-section">
+              <h2>Common mistakes</h2>
+              <ul className="mistake-list">
+                {lesson.commonMistakes.map((mistake) => (
+                  <li key={mistake}>{mistake}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <nav className="lesson-footer-nav">
+            {previous && previousModule ? (
+              <Link to={lessonPath(previousModule, previous)} className="prev">
+                <span className="kicker">Previous</span>
+                <span className="title">{previous.title}</span>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next && nextModule ? (
+              <Link to={lessonPath(nextModule, next)} className="next">
+                <span className="kicker">Next &rarr;</span>
+                <span className="title">{next.title}</span>
+              </Link>
+            ) : (
+              <Link to="/lessons" className="next">
+                <span className="kicker">Done &rarr;</span>
+                <span className="title">Review course</span>
+              </Link>
+            )}
+          </nav>
+        </article>
+
+        <aside className="lesson-side">
+          {tocItems.length > 0 && (
+            <div className="side-rail-block">
+              <div className="side-rail-label">On this page</div>
+              <div className="toc">
+                {tocItems.map((item, index) => (
+                  <a
+                    key={item.title}
+                    href={`#${slugify(item.title)}`}
+                    className={index === 0 ? 'active' : undefined}
+                  >
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {lesson.keyConcepts.length > 0 && (
+            <div className="side-rail-block">
+              <div className="side-rail-label">Key concepts</div>
+              <div className="tag-list">
+                {lesson.keyConcepts.map((concept) => (
+                  <span key={concept}>{concept}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="side-rail-block">
+            <div className="side-rail-label">Module progress</div>
+            <p>
+              {moduleProgressDone} of {moduleLessons.length} lessons complete in {module.title}.
+            </p>
+            <button
+              className="primary-button full-width"
+              type="button"
+              onClick={() => onComplete(lesson.id)}
+            >
+              {isComplete ? 'Completed' : 'Mark complete'}
+            </button>
           </div>
-        </section>
 
-        <section className="side-card">
-          <div className="panel-title">Completion</div>
-          <p>{lesson.estimatedMinutes} minute lesson</p>
-          <button className="primary-button full-width" type="button" onClick={() => onComplete(lesson.id)}>
-            <CheckCircle2 className="icon" />
-            {isComplete ? 'Completed' : 'Mark complete'}
-          </button>
-        </section>
-
-        <Checkpoint
-          checkpoint={lesson.checkpoint}
-          savedResult={checkpointResults[lesson.checkpoint.id]}
-          onAnswer={(isCorrect) => onCheckpoint(lesson.checkpoint.id, isCorrect)}
-        />
-      </aside>
+          <Checkpoint
+            checkpoint={lesson.checkpoint}
+            savedResult={checkpointResults[lesson.checkpoint.id]}
+            onAnswer={(isCorrect) => onCheckpoint(lesson.checkpoint.id, isCorrect)}
+          />
+        </aside>
+      </div>
     </div>
   )
+}
+
+function collectTocItems(lesson: { sections: LessonSection[] }) {
+  const items: Array<{ title: string }> = []
+  lesson.sections.forEach((section) => {
+    const title = sectionHeading(section)
+    if (title) {
+      items.push({ title })
+    }
+  })
+  items.push({ title: 'Practical example' })
+  items.push({ title: 'Harness-specific relevance' })
+  items.push({ title: 'Common mistakes' })
+  return items
+}
+
+function sectionHeading(section: LessonSection): string | null {
+  if (section.kind === 'text') return section.heading
+  if (section.kind === 'callout') return section.title
+  if (section.kind === 'comparison') return section.title
+  if (section.kind === 'goodBad') return section.title
+  if (section.kind === 'prompt') return section.title
+  if (section.kind === 'capstone') return section.goal
+  if (section.kind === 'setupGuide') return section.title
+  if (section.kind === 'featureMatrix') return section.title
+  if (section.kind === 'skillRecipe') return section.title
+  if (section.kind === 'interviewRubric') return section.title
+  if (section.kind === 'implementationLab') return section.title
+  if (section.kind === 'fileTemplate') return section.title
+  if (section.kind === 'decisionChecklist') return section.title
+  if (section.kind === 'workflowGuide') return section.title
+  return null
+}
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
 }
 
 function LessonSectionRenderer({ section }: { section: LessonSection }) {
   if (section.kind === 'text') {
     return (
-      <section className="lesson-section">
+      <section className="lesson-section" id={slugify(section.heading)}>
         <h2>{section.heading}</h2>
         <p>{section.body}</p>
         {section.bullets && (
@@ -197,7 +292,7 @@ function LessonSectionRenderer({ section }: { section: LessonSection }) {
 
   if (section.kind === 'prompt') {
     return (
-      <section className="lesson-section">
+      <section className="lesson-section" id={slugify(section.title)}>
         <h2>{section.title}</h2>
         <pre className="prompt-block">{section.body}</pre>
       </section>

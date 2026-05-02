@@ -6,14 +6,19 @@ import { lessonsForModule } from '../lib/courseNavigation'
 export function LessonsPage({ course, completed }: { course: Course; completed: Set<string> }) {
   return (
     <div className="page-stack">
-      <section className="page-header">
+      <div className="top-bar">
+        <span className="crumbs">Course / Lessons</span>
+        <span className="top-meta">{course.lessons.length} LESSONS</span>
+      </div>
+
+      <header className="page-header single-col">
         <span className="eyebrow">Lesson path</span>
         <h1>Agentic automation course</h1>
         <p>
           Follow the lessons in order if you are new to agentic systems. Jump to soul files, workflow design, or safety
           if you already know the basic agent loop.
         </p>
-      </section>
+      </header>
 
       {course.modules.map((module) => {
         const lessons = lessonsForModule(course, module.id)

@@ -1,10 +1,22 @@
-import { BookOpenCheck, Boxes, BrainCircuit, GitBranch, LayoutDashboard, Route, ShieldCheck } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import type { Course, ProgressState } from '../types/course'
 import { calculatePercentComplete } from '../lib/progress'
 import { ProgressBar } from './ProgressBar'
 import { ResetProgressButton } from './ResetProgressButton'
+
+const COURSE_LINKS: Array<{ to: string; label: string; matchPrefix?: string; end?: boolean }> = [
+  { to: '/', label: 'Overview', end: true },
+  { to: '/lessons', label: 'Lessons', matchPrefix: '/learn' },
+  { to: '/diagrams', label: 'Diagrams' },
+]
+
+const REFERENCE_LINKS: Array<{ to: string; label: string; matchPrefix?: string }> = [
+  { to: '/harnesses', label: 'Harnesses', matchPrefix: '/harnesses' },
+  { to: '/skills', label: 'Skills' },
+  { to: '/workflows', label: 'Workflows', matchPrefix: '/workflows' },
+  { to: '/cto', label: 'CTO track' },
+]
 
 export function CourseLayout({
   course,
@@ -23,58 +35,71 @@ export function CourseLayout({
   const percent = calculatePercentComplete(progress, course.lessons)
   const completedCount = course.lessons.filter((lesson) => completed.has(lesson.id)).length
 
+  function isActive(link: { to: string; matchPrefix?: string; end?: boolean }) {
+    if (link.end) {
+      return location.pathname === link.to
+    }
+    if (link.matchPrefix) {
+      return location.pathname === link.to || location.pathname.startsWith(link.matchPrefix)
+    }
+    return location.pathname === link.to || location.pathname.startsWith(link.to)
+  }
+
   return (
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="brand">
-          <div className="brand-mark">AA</div>
-          <div>
-            <strong>Agentic Automation Tutor</strong>
-            <span>Harness-based technical course</span>
-          </div>
+          <span className="brand-kicker">Tutor</span>
+          <span className="brand-word">Agentic Automation</span>
         </div>
 
-        <nav className="primary-nav" aria-label="Primary navigation">
-          <NavLink to="/" end>
-            <LayoutDashboard className="icon" />
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/lessons"
-            className={({ isActive }) => (isActive || location.pathname.startsWith('/learn') ? 'active' : undefined)}
-          >
-            <BookOpenCheck className="icon" />
-            Lessons
-          </NavLink>
-          <NavLink to="/harnesses" className={({ isActive }) => (isActive || location.pathname.startsWith('/harnesses') ? 'active' : undefined)}>
-            <Boxes className="icon" />
-            Harnesses
-          </NavLink>
-          <NavLink to="/skills">
-            <BrainCircuit className="icon" />
-            Skills
-          </NavLink>
-          <NavLink to="/workflows">
-            <Route className="icon" />
-            Workflows
-          </NavLink>
-          <NavLink to="/cto">
-            <ShieldCheck className="icon" />
-            CTO Track
-          </NavLink>
-          <NavLink to="/diagrams">
-            <GitBranch className="icon" />
-            Diagrams
-          </NavLink>
-        </nav>
+        <div className="nav-group">
+          <span className="nav-group-label">Course</span>
+          <nav className="primary-nav" aria-label="Course navigation">
+            {COURSE_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.end}
+                className={() => (isActive(link) ? 'active' : undefined)}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
 
-        <section className="sidebar-panel">
-          <div className="panel-title">Progress</div>
-          <ProgressBar percent={percent} label={`${percent}% complete`} />
-          <p>
-            {completedCount} of {course.lessons.length} lessons complete
-          </p>
-          <p>Last visit: {formatDate(progress.lastVisitedAt)}</p>
+        <div className="nav-group">
+          <span className="nav-group-label">Reference</span>
+          <nav className="primary-nav" aria-label="Reference navigation">
+            {REFERENCE_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={() => (isActive(link) ? 'active' : undefined)}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+
+        <section className="sidebar-foot">
+          <div className="sidebar-foot-row">
+            <span className="sidebar-foot-label">Progress</span>
+            <span className="sidebar-foot-value">{percent}%</span>
+          </div>
+          <ProgressBar percent={percent} variant="thin" />
+          <div className="sidebar-foot-row">
+            <span className="sidebar-foot-label">Lessons</span>
+            <span className="sidebar-foot-value">
+              {completedCount} / {course.lessons.length}
+            </span>
+          </div>
+          <div className="sidebar-foot-row">
+            <span className="sidebar-foot-label">Last visit</span>
+            <span className="sidebar-foot-value">{formatDate(progress.lastVisitedAt)}</span>
+          </div>
           <ResetProgressButton onReset={onResetProgress} />
         </section>
       </aside>
@@ -87,7 +112,7 @@ export function CourseLayout({
 function formatDate(value: string) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) {
-    return 'not recorded'
+    return '—'
   }
   return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }

@@ -26,20 +26,26 @@ export function HarnessDetailPage({ course, completed }: { course: Course; compl
 
   return (
     <div className="page-stack">
-      <section className="page-header">
-        <Link className="inline-link" to="/harnesses">
+      <div className="top-bar">
+        <span className="crumbs">Reference / Harnesses / {meta.slug}</span>
+        <Link className="text-link" to="/harnesses">
           <ArrowLeft className="icon" />
-          Harnesses
+          All harnesses
         </Link>
+      </div>
+
+      <header className="page-header single-col">
         <span className="eyebrow">Dedicated harness section</span>
         <h1>{meta.title}</h1>
         <p>{meta.summary}</p>
         {firstLesson && (
-          <Link className="primary-button" to={lessonPath(module, firstLesson)}>
-            Start {meta.title}
-          </Link>
+          <div style={{ marginTop: '1.5rem' }}>
+            <Link className="primary-button" to={lessonPath(module, firstLesson)}>
+              Start {meta.title}
+            </Link>
+          </div>
         )}
-      </section>
+      </header>
 
       <ModuleOverview course={course} module={module} completed={completed} />
 

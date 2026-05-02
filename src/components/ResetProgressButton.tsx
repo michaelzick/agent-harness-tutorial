@@ -1,5 +1,3 @@
-import { RotateCcw } from 'lucide-react'
-
 export function ResetProgressButton({ onReset }: { onReset: () => void }) {
   function handleReset() {
     if (window.confirm('Reset all lesson and checkpoint progress?')) {
@@ -8,8 +6,7 @@ export function ResetProgressButton({ onReset }: { onReset: () => void }) {
   }
 
   return (
-    <button className="secondary-button full-width" type="button" onClick={handleReset}>
-      <RotateCcw className="icon" />
+    <button className="reset-button" type="button" onClick={handleReset}>
       Reset progress
     </button>
   )

@@ -13,14 +13,19 @@ export function WorkflowsPage({ course, completed }: { course: Course; completed
   if (!harnessSlug) {
     return (
       <div className="page-stack">
-        <section className="page-header workflow-playbook-header">
+        <div className="top-bar">
+          <span className="crumbs">Reference / Workflows</span>
+          <span className="top-meta">5 HARNESSES</span>
+        </div>
+
+        <header className="page-header single-col workflow-playbook-header">
           <span className="eyebrow">Harness-specific workflows</span>
           <h1>Choose one harness before you start the playbook.</h1>
           <p>
             Each workflow track teaches the same business use cases through one selected harness only. Pick Codex,
             Claude Cowork, OpenClaw, NemoClaw, or Hermes, then follow lessons that keep every step in that harness.
           </p>
-        </section>
+        </header>
 
         <WorkflowHarnessSelector course={course} completed={completed} />
       </div>
@@ -47,21 +52,27 @@ export function WorkflowsPage({ course, completed }: { course: Course; completed
 
   return (
     <div className="page-stack">
-      <section className="page-header workflow-playbook-header">
-        <Link className="inline-link" to="/workflows">
+      <div className="top-bar">
+        <span className="crumbs">Reference / Workflows / {meta.slug}</span>
+        <Link className="text-link" to="/workflows">
           <ArrowLeft className="icon" />
-          Workflow harnesses
+          All harnesses
         </Link>
+      </div>
+
+      <header className="page-header single-col workflow-playbook-header">
         <span className="eyebrow">Harness-specific workflows</span>
         <h1>{meta.title} workflow playbooks</h1>
         <p>{module.summary}</p>
         {firstLesson && (
-          <Link className="primary-button" to={lessonPath(module, firstLesson)}>
-            Start {meta.title} workflows
-            <ArrowRight className="icon" />
-          </Link>
+          <div style={{ marginTop: '1.5rem' }}>
+            <Link className="primary-button" to={lessonPath(module, firstLesson)}>
+              Start {meta.title} workflows
+              <ArrowRight className="icon" />
+            </Link>
+          </div>
         )}
-      </section>
+      </header>
 
       <WorkflowHarnessSelector course={course} completed={completed} activeHarnessId={harnessId} />
 

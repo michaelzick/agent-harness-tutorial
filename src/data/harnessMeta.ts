@@ -2,6 +2,14 @@ import type { HarnessId } from '../types/course'
 
 export const harnessOrder: HarnessId[] = ['codex', 'claude-cowork', 'openclaw', 'nemoclaw', 'hermes']
 
+export const harnessMarks: Record<HarnessId, string> = {
+  codex: 'CDX',
+  'claude-cowork': 'CWK',
+  openclaw: 'OPN',
+  nemoclaw: 'NMO',
+  hermes: 'HRM',
+}
+
 export const harnessMeta: Record<HarnessId, { title: string; slug: string; summary: string; bestFor: string }> = {
   codex: {
     title: 'Codex',

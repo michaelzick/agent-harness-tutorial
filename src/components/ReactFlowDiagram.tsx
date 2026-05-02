@@ -12,8 +12,8 @@ import {
 import { useEffect, useMemo, useState } from 'react'
 import type { DiagramDefinition } from '../types/course'
 
-const FALLBACK_ACCENT = '#6cc1d2'
-const NODE_BG = '#0c1320'
+const FALLBACK_ACCENT = '#d4a55a'
+const NODE_BG = '#1f1d18'
 
 export function ReactFlowDiagram({ diagram }: { diagram: DiagramDefinition }) {
   return <DiagramView key={diagram.id} diagram={diagram} />
@@ -167,7 +167,7 @@ function buildEdges(
         fontWeight: isHighlighted ? 800 : 600,
         opacity: hasSelection ? (isHighlighted ? 1 : 0.4) : 1,
       },
-      labelBgStyle: { fill: '#0c1320', fillOpacity: 0.92 },
+      labelBgStyle: { fill: NODE_BG, fillOpacity: 0.92 },
     }
   })
 }
