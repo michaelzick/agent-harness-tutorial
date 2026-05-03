@@ -6,7 +6,7 @@ import { harnessModules } from './harnessModules'
 import { workflowModules } from './workflows'
 
 export const course = buildCourse({
-  title: 'Agentic Automation Tutor',
+  title: 'Agent Harness Tutorial',
   summary:
     'A practical course on designing, installing, governing, and evaluating agentic automation with Codex, Claude Cowork, OpenClaw, NemoClaw, and Hermes.',
   modules: [...foundationModules, ...harnessModules, ...contextModules, ...workflowModules, ...capstoneModules],

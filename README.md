@@ -1,4 +1,4 @@
-# Agentic Automation Tutor
+# Agent Harness Tutorial
 
 A frontend-only tutorial app for learning agentic automation through five harness examples:
 

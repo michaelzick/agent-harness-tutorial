@@ -1,0 +1,28 @@
+{
+  "name": "Agent Harness Tutorial",
+  "short_name": "Agent Harness",
+  "description": "A practical course on designing useful agents with clear harnesses, context, tools, safety gates, and evaluation loops.",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#0f0d09",
+  "background_color": "#0f0d09",
+  "display": "standalone"
+}
