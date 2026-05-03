@@ -1187,6 +1187,16 @@ a:focus-visible {
   overflow-x: auto;
   border-top: 1px solid var(--hair);
   border-bottom: 1px solid var(--hair);
+  background-color: var(--bg-app);
+  background-image:
+    linear-gradient(to right, var(--bg-app), transparent),
+    linear-gradient(to left,  var(--bg-app), transparent),
+    linear-gradient(to right, rgba(255,255,255,0.07), transparent),
+    linear-gradient(to left,  rgba(255,255,255,0.07), transparent);
+  background-size: 28px 100%, 28px 100%, 14px 100%, 14px 100%;
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
 }
 
 table {
@@ -2068,10 +2078,19 @@ tr:last-child th {
     gap: 0.75rem;
   }
 
-  .module-row,
-  .harness-row {
+  .module-row {
     grid-template-columns: 32px minmax(0, 1fr);
     gap: 0.85rem;
+  }
+
+  .harness-row {
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .harness-row-bestfor {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 
   .module-row-count,
@@ -2094,5 +2113,42 @@ tr:last-child th {
 
   .workflow-step {
     grid-template-columns: 1fr;
+  }
+
+  /* Fix 1: Lesson card — reduce index column, drop arrow to give title more room */
+  .lesson-card {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 0.85rem;
+  }
+
+  .lesson-card .muted-icon {
+    display: none;
+  }
+
+  /* Fix 2: ReactFlow minimap obscures diagram canvas on small screens */
+  .react-flow__minimap {
+    display: none;
+  }
+
+  /* Fix 3: Reduce horizontal padding on callout and panel components */
+  .callout,
+  .skill-recipe,
+  .interview-rubric,
+  .implementation-lab,
+  .file-template,
+  .decision-checklist,
+  .workflow-guide,
+  .capstone-panel,
+  .mini-panel {
+    padding: 1.1rem 1.25rem;
+  }
+
+  .callout > p {
+    font-size: 1.1rem;
+  }
+
+  /* Fix 4: Hide nav group labels — links are self-explanatory on mobile */
+  .nav-group-label {
+    display: none;
   }
 }
