@@ -2078,10 +2078,19 @@ tr:last-child th {
     gap: 0.75rem;
   }
 
-  .module-row,
-  .harness-row {
+  .module-row {
     grid-template-columns: 32px minmax(0, 1fr);
     gap: 0.85rem;
+  }
+
+  .harness-row {
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .harness-row-bestfor {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 
   .module-row-count,
