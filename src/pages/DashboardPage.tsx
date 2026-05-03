@@ -43,7 +43,7 @@ export function DashboardPage({
   return (
     <div className="page-stack">
       <div className="top-bar">
-        <span className="crumbs">Tutor / Overview</span>
+        <span className="crumbs">Agent Harness Tutorial / Overview</span>
         <span className="top-meta">{percent}% complete · Last visit {lastVisit}</span>
       </div>
 

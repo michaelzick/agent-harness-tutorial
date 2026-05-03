@@ -49,8 +49,8 @@ export function CourseLayout({
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="brand">
-          <span className="brand-kicker">Tutor</span>
-          <span className="brand-word">Agentic Automation</span>
+          <span className="brand-kicker">Tutorial</span>
+          <span className="brand-word">Agent Harness</span>
         </div>
 
         <div className="nav-group">
