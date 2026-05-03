@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "/Users/michaelzick/.nvm/versions/node/v24.14.1/bin/node",
+      "runtimeArgs": ["/Users/michaelzick/Engineering/GitHub/agent-harness-tutorial/node_modules/.bin/vite"],
+      "port": 5173
+    }
+  ]
+}
