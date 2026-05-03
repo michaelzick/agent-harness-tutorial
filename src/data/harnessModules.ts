@@ -52,6 +52,18 @@ export const harnessModules: ModuleInput[] = [
             title: 'Strong starter prompt',
             body:
               'Inspect this repo and propose a minimal implementation plan before editing files. Use the existing architecture and test style. After editing, run the smallest relevant check and summarize the diff, verification, and any remaining risk.',
+            whereToUse:
+              'Open a terminal, `cd` into your repo, run `codex`, and paste this as your first message in the session.',
+            whatHappensNext: [
+              'Codex reads the repo (or your `AGENTS.md` map first if one exists) and replies with a short plan instead of jumping straight to edits.',
+              'You either approve the plan, redirect it, or add the missing detail it asks about.',
+              'Once approved, Codex writes a patch, runs the check you named, and reports the diff plus any residual risk.',
+              'You review the diff like a pull request before accepting or rolling it back.',
+            ],
+            whyThisShape:
+              'Codex is strongest when work has a repo, a target behavior, constraints, and a check. This prompt names all four — repo to inspect, plan-before-edit behavior, “existing architecture and test style” as the constraint, and “smallest relevant check” as the success signal — so Codex knows what done looks like before it touches a file.',
+            tryThis:
+              'Replace “smallest relevant check” with your project’s actual command (e.g. `pnpm typecheck`, `npm test -- --runInBand`) and run the prompt against a tiny refactor — renaming one helper is enough.',
           },
         ],
         practicalExample:
@@ -244,6 +256,17 @@ export const harnessModules: ModuleInput[] = [
             title: 'Strong starter prompt',
             body:
               'Turn this messy product idea into a PRD with assumptions, risks, open questions, user flows, success metrics, and a first implementation plan. Use only the files in this project folder unless I approve more sources.',
+            whereToUse:
+              'Open Claude Desktop, select the Cowork project you set up, and paste this in the project chat — not a regular Claude chat. The project chat is the only surface that can read your connected folder.',
+            whatHappensNext: [
+              'Cowork reads the files in the project folder and may ask one or two clarifying questions before drafting.',
+              'It returns a structured Markdown PRD inline; if your project instructions point to `./deliverables`, it can save the artifact there instead.',
+              'You review, ask for revisions, or hand the PRD off to a Codex or Hermes session as the next step in the chain.',
+            ],
+            whyThisShape:
+              'Cowork’s sweet spot is turning unstructured context into a decision-ready artifact. The prompt names the artifact (PRD), the required sections (assumptions, risks, …), and a hard source boundary (“only files in this project folder”) so Cowork doesn’t silently pull from connected tools you forgot to disconnect.',
+            tryThis:
+              'Drop two or three messy notes into the project folder and run the prompt. Then check the output: every claim should map back to a file you actually included.',
           },
         ],
         practicalExample:
@@ -442,10 +465,21 @@ description: Synthesize local research files into a decision memo with cited sou
             title: 'Strong starter prompt',
             body:
               'Create a read-only browser automation skill that checks failed jobs in the dashboard, captures evidence, writes a Markdown summary, and stops before retrying, deleting, or notifying anyone.',
+            whereToUse:
+              'Send this from whichever entry point you wired during onboarding — your messaging gateway (Slack/Telegram bridge), the OpenClaw CLI in your test workspace, or the local chat surface. Use the test workspace until the skill behaves the way you expect.',
+            whatHappensNext: [
+              'OpenClaw drafts a `SKILL.md` describing the read-only browser steps and asks you to approve installation in the workspace.',
+              'After approval, it opens the dashboard in read-only mode, captures evidence, writes the Markdown summary to your reports folder, and stops.',
+              'You inspect the summary and the saved `SKILL.md` before pointing the skill at any production dashboard or adding write permissions.',
+            ],
+            whyThisShape:
+              'Skills, read-only behavior, and an explicit stop rule are OpenClaw’s three safety levers. This prompt exercises all three on the first run — the agent learns to package the work as a reusable skill, the browser actions are scoped to read-only, and “stops before retrying, deleting, or notifying” makes the boundary unambiguous.',
+            tryThis:
+              'Run it against a staging or test dashboard first. Once you’ve reviewed the generated `SKILL.md` end to end, you can promote it to a real workspace by editing the policy file rather than rewriting the skill.',
           },
         ],
         practicalExample:
-          'Run a morning dashboard check that reports failures to a messaging channel without changing job state.',
+          'Each morning, the agent opens your jobs dashboard read-only, screenshots any rows in a failed state, posts a summary to a `#agent-reports` test channel, and stops — never retrying jobs or paging on-call.',
         harnessRelevance:
           'OpenClaw is the personal workstation and local-tool harness in this course.',
         commonMistakes: ['Installing unreviewed skills.', 'Giving browser credentials before read-only behavior works.', 'Letting the agent operate without a stop rule.'],
@@ -629,6 +663,24 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
               'Use it when policy decisions must be inspectable.',
               'Use it when workstation automation needs a path toward enterprise governance.',
             ],
+          },
+          {
+            kind: 'prompt',
+            title: 'Strong starter prompt',
+            body:
+              'Run the existing read-only dashboard audit skill inside this sandboxed session and confirm the policy layer logged each tool call. Do not perform any external writes, retries, or notifications until I have reviewed the logs and confirmed the decision path.',
+            whereToUse:
+              'Open two terminals. In the first, run `nemoclaw my-assistant connect` and then `openclaw agent --agent main --local --session-id starter-test`. Paste the prompt as the first message in that session. In the second terminal, run `nemoclaw my-assistant logs --follow` so you can watch the policy decisions as they happen.',
+            whatHappensNext: [
+              'The sandboxed runtime loads the named skill, applies the active policy, and starts read-only execution.',
+              'Each tool call passes through the policy layer; allowed actions execute, denied actions are recorded with a reason in the streaming log.',
+              'You read the second terminal’s log output to confirm the decision path matches what you expected: the right skill loaded, only read-only actions allowed, and the agent stopped at the boundary you named.',
+              'You decide whether to relax a policy rule and rerun, or whether the sandbox is behaving correctly and the skill is ready for a wider workspace.',
+            ],
+            whyThisShape:
+              'NemoClaw’s value is the inspectable boundary, not the agent itself — the same OpenClaw skill could run on bare metal. This prompt forces every interesting thing into the logs (skill loaded, actions allowed, actions denied, stop reason) so you validate the policy layer first, before trusting the sandbox with anything sensitive. Because NemoClaw is early-preview, the validation step is the point.',
+            tryThis:
+              'Add a deliberately disallowed step to the skill — for example, a write to a path outside `./reports` — and rerun. The denial should appear in `nemoclaw my-assistant logs --follow` with a clear reason rather than failing silently. If it doesn’t, the policy layer is not yet enforcing what you think it is.',
           },
         ],
         practicalExample:
@@ -816,10 +868,21 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
             title: 'Strong starter prompt',
             body:
               'Create a repeatable workflow for generating a weekly growth report. Use approved sources, write the report to the configured folder, list assumptions, and stop before posting or emailing.',
+            whereToUse:
+              'Run this inside the Hermes CLI as the input to a new on-demand workflow (use the workflow command from your installed version, e.g. `hermes workflow new growth-report`). Do not attach a schedule yet — keep the first runs manual.',
+            whatHappensNext: [
+              'Hermes either loads a matching skill from `~/.hermes/skills` or proposes one, then reads the sources you’ve approved.',
+              'It drafts the report into the configured folder, captures any decisions you confirm into memory, and stops at the review gate.',
+              'You review the draft, accept or revise it, and decide whether to publish — Hermes never sends or schedules without that approval.',
+            ],
+            whyThisShape:
+              'Durable Hermes workflows need three things to stay safe: named sources, a configured destination, and an explicit stop. Without all three, scheduled tasks become noisy, leak data, or send things you didn’t mean to send. The prompt enforces all three on the very first run.',
+            tryThis:
+              'Run the workflow manually on three or four consecutive Fridays before turning on a schedule. The manual runs are how you find out which “approved sources” are actually current.',
           },
         ],
         practicalExample:
-          'A weekly funnel workflow pulls metrics, drafts a narrative, proposes experiments, and waits for approval before publication.',
+          'Build a weekly funnel workflow: it reads `~/growth-data/` (CSV exports from your analytics tool), drafts a narrative report into `~/growth-reports/<date>.md`, proposes two experiments based on the deltas, and stops at the review gate before any publishing or email.',
         harnessRelevance:
           'Hermes is the course’s workflow-and-skill orchestration example.',
         commonMistakes: ['Letting memory become a junk drawer.', 'Skipping review gates for scheduled tasks.', 'Creating broad skills with vague triggers.'],

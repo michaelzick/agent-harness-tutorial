@@ -349,9 +349,37 @@ function LessonSectionRenderer({ section }: { section: LessonSection }) {
 
   if (section.kind === 'prompt') {
     return (
-      <section className="lesson-section">
+      <section className="lesson-section prompt-tutorial">
         <h2>{section.title}</h2>
+        {section.whereToUse && (
+          <div className="prompt-tutorial-row">
+            <span className="prompt-tutorial-label">Where to paste it</span>
+            <p>{section.whereToUse}</p>
+          </div>
+        )}
         <pre className="prompt-block">{section.body}</pre>
+        {section.whatHappensNext && section.whatHappensNext.length > 0 && (
+          <div className="prompt-tutorial-row">
+            <span className="prompt-tutorial-label">What happens after you send it</span>
+            <ol>
+              {section.whatHappensNext.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+          </div>
+        )}
+        {section.whyThisShape && (
+          <div className="prompt-tutorial-row">
+            <span className="prompt-tutorial-label">Why the prompt is shaped this way</span>
+            <p>{section.whyThisShape}</p>
+          </div>
+        )}
+        {section.tryThis && (
+          <div className="prompt-tutorial-row">
+            <span className="prompt-tutorial-label">Try this next</span>
+            <p>{section.tryThis}</p>
+          </div>
+        )}
       </section>
     )
   }

@@ -94,6 +94,10 @@ export type LessonSection =
       kind: 'prompt'
       title: string
       body: string
+      whereToUse?: string
+      whatHappensNext?: string[]
+      whyThisShape?: string
+      tryThis?: string
     }
   | {
       kind: 'capstone'

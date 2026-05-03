@@ -1508,6 +1508,34 @@ tr:last-child th {
   font-size: 0.825rem;
 }
 
+.prompt-tutorial {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.prompt-tutorial-row {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.prompt-tutorial-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.prompt-tutorial-row p,
+.prompt-tutorial-row ol {
+  margin: 0;
+}
+
+.prompt-tutorial-row ol {
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
 .compact-list {
   display: grid;
   gap: 0.35rem;
