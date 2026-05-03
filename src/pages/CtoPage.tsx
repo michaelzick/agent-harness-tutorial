@@ -8,14 +8,19 @@ export function CtoPage({ course, completed }: { course: Course; completed: Set<
 
   return (
     <div className="page-stack">
-      <section className="page-header">
+      <div className="top-bar">
+        <span className="crumbs">Reference / CTO track</span>
+        <span className="top-meta">{modules.reduce((acc, module) => acc + lessonsForModule(course, module.id).length, 0)} LESSONS</span>
+      </div>
+
+      <header className="page-header single-col">
         <span className="eyebrow">CTO hiring bar</span>
         <h1>Answer like the person responsible for the system.</h1>
         <p>
           These lessons focus on architecture judgment, build-vs-buy, workstation-to-enterprise rollout, governance,
           observability, evals, incident response, and marketplace risk.
         </p>
-      </section>
+      </header>
 
       {modules.map((module) => {
         const lessons = lessonsForModule(course, module.id)

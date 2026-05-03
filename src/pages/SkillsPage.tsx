@@ -9,7 +9,12 @@ export function SkillsPage({ course, completed }: { course: Course; completed: S
 
   return (
     <div className="page-stack">
-      <section className="page-header">
+      <div className="top-bar">
+        <span className="crumbs">Reference / Skills</span>
+        <span className="top-meta">{lessons.length} LESSONS</span>
+      </div>
+
+      <header className="page-header single-col">
         <span className="eyebrow">Skills and marketplaces</span>
         <h1>Turn repeated prompting into reviewed procedures.</h1>
         <p>
@@ -17,11 +22,13 @@ export function SkillsPage({ course, completed }: { course: Course; completed: S
           internal skill catalogs fit into a serious automation practice.
         </p>
         {module && lessons[0] && (
-          <Link className="primary-button" to={lessonPath(module, lessons[0])}>
-            Start skills module
-          </Link>
+          <div style={{ marginTop: '1.5rem' }}>
+            <Link className="primary-button" to={lessonPath(module, lessons[0])}>
+              Start skills module
+            </Link>
+          </div>
         )}
-      </section>
+      </header>
 
       {module && (
         <section className="lesson-card-list">
