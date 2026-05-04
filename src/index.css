@@ -335,6 +335,171 @@ a:focus-visible {
   padding: 2.4rem 3rem;
 }
 
+/* Mobile top bar (hidden on desktop) */
+.mobile-topbar {
+  display: none;
+  align-items: center;
+  gap: 0.85rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: -1.25rem -1rem 1.5rem;
+  padding: 0.7rem 1rem;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--hair);
+}
+
+.mobile-topbar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--hair);
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--ease-soft),
+              color var(--motion-fast) var(--ease-soft);
+}
+
+.mobile-topbar-button:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.mobile-topbar-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  line-height: 1.1;
+}
+
+/* Mobile drawer */
+.mobile-drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.55);
+  z-index: 50;
+  animation: drawer-fade var(--motion-fast) var(--ease-soft);
+}
+
+.mobile-drawer-panel {
+  display: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: min(320px, 86vw);
+  background: var(--bg-sidebar);
+  z-index: 51;
+  flex-direction: column;
+  padding: 1rem 1.1rem;
+  overflow-y: auto;
+  box-shadow: 0 0 40px oklch(0 0 0 / 0.4);
+}
+
+@media (max-width: 880px) {
+  .mobile-drawer-backdrop { display: block; }
+  .mobile-drawer-panel { display: flex; }
+}
+
+.mobile-drawer-panel.left {
+  left: 0;
+  border-right: 1px solid var(--hair);
+  animation: drawer-slide-left var(--motion-fast) var(--ease-soft);
+}
+
+.mobile-drawer-panel.right {
+  right: 0;
+  border-left: 1px solid var(--hair);
+  animation: drawer-slide-right var(--motion-fast) var(--ease-soft);
+}
+
+.mobile-drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.mobile-drawer-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mobile-drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--hair);
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--ease-soft),
+              color var(--motion-fast) var(--ease-soft);
+}
+
+.mobile-drawer-close:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.mobile-drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  flex: 1;
+}
+
+@keyframes drawer-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes drawer-slide-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes drawer-slide-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Lesson outline FAB (hidden on desktop) */
+.lesson-outline-fab {
+  display: none;
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 5;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  box-shadow: 0 6px 24px oklch(0 0 0 / 0.35);
+  transition: background var(--motion-fast) var(--ease-soft);
+}
+
+.lesson-outline-fab:hover {
+  background: oklch(0.82 0.14 70);
+}
+
 .page-stack {
   display: flex;
   flex-direction: column;
@@ -2039,30 +2204,19 @@ tr:last-child th {
   }
 
   .app-sidebar {
-    position: static;
-    height: auto;
-    border-right: 0;
-    border-bottom: 1px solid var(--hair);
-    padding: 0.9rem 1rem;
-    gap: 0.85rem;
-  }
-
-  .sidebar-foot {
     display: none;
   }
 
-  .primary-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.25rem;
+  .mobile-topbar {
+    display: flex;
   }
 
-  .primary-nav a {
-    font-size: 0.78rem;
-  }
-
-  .primary-nav a.active::before {
+  .lesson-side {
     display: none;
+  }
+
+  .lesson-outline-fab {
+    display: inline-flex;
   }
 
   .main-shell {
@@ -2156,10 +2310,5 @@ tr:last-child th {
 
   .callout > p {
     font-size: 1.1rem;
-  }
-
-  /* Fix 4: Hide nav group labels — links are self-explanatory on mobile */
-  .nav-group-label {
-    display: none;
   }
 }
