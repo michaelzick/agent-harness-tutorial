@@ -27,6 +27,12 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 })
 
+Object.defineProperty(window, 'scrollTo', {
+  writable: true,
+  configurable: true,
+  value: () => {},
+})
+
 Element.prototype.getBoundingClientRect = function getBoundingClientRect() {
   return {
     x: 0,

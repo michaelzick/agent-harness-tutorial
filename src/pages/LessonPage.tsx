@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { diagramById } from '../data/diagrams'
-import type { Course, LessonSection } from '../types/course'
+import type { Course, Lesson, LessonSection, CourseModule } from '../types/course'
 import {
   adjacentLessons,
   findLessonRef,
@@ -25,6 +25,8 @@ import { ImplementationLab } from '../components/ImplementationLab'
 import { FileTemplate } from '../components/FileTemplate'
 import { DecisionChecklist } from '../components/DecisionChecklist'
 import { WorkflowGuide } from '../components/WorkflowGuide'
+import { OutlineContext } from '../components/OutlineContext'
+import { MobileDrawer } from '../components/MobileDrawer'
 
 const PRACTICAL_EXAMPLE = 'Practical example'
 const HARNESS_RELEVANCE = 'Harness-specific relevance'
@@ -49,8 +51,14 @@ export function LessonPage({
 }) {
   const { moduleSlug, lessonSlug } = useParams()
   const ref = findLessonRef(course, moduleSlug, lessonSlug)
-
+  const [outlineState, setOutlineState] = useState({ open: false, lessonId: ref?.lesson.id })
+  const outlineCtx = useContext(OutlineContext)
   const lessonId = ref?.lesson.id
+  const outlineOpen = outlineState.open && outlineState.lessonId === lessonId
+
+  function closeOutline() {
+    setOutlineState((current) => ({ ...current, open: false }))
+  }
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
@@ -61,6 +69,17 @@ export function LessonPage({
       onVisit(lessonId)
     }
   }, [onVisit, lessonId])
+
+  useEffect(() => {
+    const openOutline = lessonId
+      ? () => {
+          setOutlineState({ open: true, lessonId })
+        }
+      : null
+
+    outlineCtx?.setOutlineHandler(openOutline)
+    return () => outlineCtx?.setOutlineHandler(null)
+  }, [lessonId, outlineCtx])
 
   if (!ref) {
     return <Navigate to="/lessons" replace />
@@ -179,47 +198,107 @@ export function LessonPage({
         </article>
 
         <aside className="lesson-side">
-          {tocItems.length > 0 && (
-            <LessonToc key={lesson.id} items={tocItems} />
-          )}
-
-          {lesson.keyConcepts.length > 0 && (
-            <div className="side-rail-block">
-              <div className="side-rail-label">Key concepts</div>
-              <div className="tag-list">
-                {lesson.keyConcepts.map((concept) => (
-                  <span key={concept}>{concept}</span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="side-rail-block">
-            <div className="side-rail-label">Module progress</div>
-            <p>
-              {moduleProgressDone} of {moduleLessons.length} lessons complete in {module.title}.
-            </p>
-            <button
-              className="primary-button full-width"
-              type="button"
-              onClick={() => onComplete(lesson.id)}
-            >
-              {isComplete ? 'Completed' : 'Mark complete'}
-            </button>
-          </div>
-
-          <Checkpoint
-            checkpoint={lesson.checkpoint}
-            savedResult={checkpointResults[lesson.checkpoint.id]}
-            onAnswer={(isCorrect) => onCheckpoint(lesson.checkpoint.id, isCorrect)}
+          <LessonSideContents
+            lesson={lesson}
+            module={module}
+            tocItems={tocItems}
+            moduleProgressDone={moduleProgressDone}
+            moduleLessonCount={moduleLessons.length}
+            isComplete={isComplete}
+            checkpointResult={checkpointResults[lesson.checkpoint.id]}
+            onComplete={onComplete}
+            onCheckpoint={onCheckpoint}
           />
         </aside>
       </div>
+
+      <MobileDrawer
+        open={outlineOpen}
+        onClose={closeOutline}
+        side="right"
+        title="On this page"
+      >
+        <LessonSideContents
+          lesson={lesson}
+          module={module}
+          tocItems={tocItems}
+          moduleProgressDone={moduleProgressDone}
+          moduleLessonCount={moduleLessons.length}
+          isComplete={isComplete}
+          checkpointResult={checkpointResults[lesson.checkpoint.id]}
+          onComplete={onComplete}
+          onCheckpoint={onCheckpoint}
+          onNavigate={closeOutline}
+        />
+      </MobileDrawer>
     </div>
   )
 }
 
-function LessonToc({ items }: { items: TocItem[] }) {
+function LessonSideContents({
+  lesson,
+  module,
+  tocItems,
+  moduleProgressDone,
+  moduleLessonCount,
+  isComplete,
+  checkpointResult,
+  onComplete,
+  onCheckpoint,
+  onNavigate,
+}: {
+  lesson: Lesson
+  module: CourseModule
+  tocItems: TocItem[]
+  moduleProgressDone: number
+  moduleLessonCount: number
+  isComplete: boolean
+  checkpointResult: boolean | undefined
+  onComplete: (lessonId: string) => void
+  onCheckpoint: (checkpointId: string, isCorrect: boolean) => void
+  onNavigate?: () => void
+}) {
+  return (
+    <>
+      {tocItems.length > 0 && (
+        <LessonToc key={lesson.id} items={tocItems} onNavigate={onNavigate} />
+      )}
+
+      {lesson.keyConcepts.length > 0 && (
+        <div className="side-rail-block">
+          <div className="side-rail-label">Key concepts</div>
+          <div className="tag-list">
+            {lesson.keyConcepts.map((concept) => (
+              <span key={concept}>{concept}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="side-rail-block">
+        <div className="side-rail-label">Module progress</div>
+        <p>
+          {moduleProgressDone} of {moduleLessonCount} lessons complete in {module.title}.
+        </p>
+        <button
+          className="primary-button full-width"
+          type="button"
+          onClick={() => onComplete(lesson.id)}
+        >
+          {isComplete ? 'Completed' : 'Mark complete'}
+        </button>
+      </div>
+
+      <Checkpoint
+        checkpoint={lesson.checkpoint}
+        savedResult={checkpointResult}
+        onAnswer={(isCorrect) => onCheckpoint(lesson.checkpoint.id, isCorrect)}
+      />
+    </>
+  )
+}
+
+function LessonToc({ items, onNavigate }: { items: TocItem[]; onNavigate?: () => void }) {
   const [activeSlug, setActiveSlug] = useState<string>(items[0]?.slug ?? '')
 
   function handleClick(event: React.MouseEvent<HTMLAnchorElement>, slug: string) {
@@ -231,6 +310,7 @@ function LessonToc({ items }: { items: TocItem[] }) {
     target.scrollIntoView({ behavior: 'smooth', block: 'start' })
     history.replaceState(null, '', `#${slug}`)
     setActiveSlug(slug)
+    onNavigate?.()
   }
 
   return (

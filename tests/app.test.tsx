@@ -28,7 +28,7 @@ describe('Agent Harness Tutorial app', () => {
   it('renders the dashboard and course modules', () => {
     render(<App />)
 
-    expect(screen.getByText('Agent Harness')).toBeInTheDocument()
+    expect(screen.getAllByText('Agent Harness').length).toBeGreaterThan(0)
     expect(
       screen.getByRole('heading', { level: 1, name: /Design useful agents,\s*not vague autonomy\./ }),
     ).toBeInTheDocument()
