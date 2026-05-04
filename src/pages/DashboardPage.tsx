@@ -1,44 +1,44 @@
-import { ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import type { Course, ProgressState } from '../types/course'
-import { calculatePercentComplete } from '../lib/progress'
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import type { Course, ProgressState } from '../types/course';
+import { calculatePercentComplete } from '../lib/progress';
 import {
   findLessonById,
   findModuleForLesson,
   firstIncompleteLesson,
   lessonPath,
   lessonsForModule,
-} from '../lib/courseNavigation'
-import { harnessOrder } from '../data/harnessMeta'
-import { ProgressBar } from '../components/ProgressBar'
+} from '../lib/courseNavigation';
+import { harnessOrder } from '../data/harnessMeta';
+import { ProgressBar } from '../components/ProgressBar';
 
 export function DashboardPage({
   course,
   progress,
   completed,
 }: {
-  course: Course
-  progress: ProgressState
-  completed: Set<string>
+  course: Course;
+  progress: ProgressState;
+  completed: Set<string>;
 }) {
-  const percent = calculatePercentComplete(progress, course.lessons)
-  const currentLesson = findLessonById(course, progress.currentLessonId)
-  const resumeLesson = currentLesson ?? firstIncompleteLesson(course, completed)
-  const resumeModule = resumeLesson ? findModuleForLesson(course, resumeLesson) : null
+  const percent = calculatePercentComplete(progress, course.lessons);
+  const currentLesson = findLessonById(course, progress.currentLessonId);
+  const resumeLesson = currentLesson ?? firstIncompleteLesson(course, completed);
+  const resumeModule = resumeLesson ? findModuleForLesson(course, resumeLesson) : null;
   const resumeModuleIndex = resumeModule
     ? course.modules.findIndex((module) => module.id === resumeModule.id) + 1
-    : 0
+    : 0;
   const resumeLessonIndex = resumeModule && resumeLesson
     ? lessonsForModule(course, resumeModule.id).findIndex((lesson) => lesson.id === resumeLesson.id) + 1
-    : 0
+    : 0;
 
-  const completedLessons = course.lessons.filter((lesson) => completed.has(lesson.id)).length
-  const totalLessons = course.lessons.length
-  const totalDiagrams = new Set(course.lessons.map((lesson) => lesson.diagramId).filter(Boolean)).size
-  const harnessCount = harnessOrder.length
-  const moduleCount = course.modules.length
+  const completedLessons = course.lessons.filter((lesson) => completed.has(lesson.id)).length;
+  const totalLessons = course.lessons.length;
+  const totalDiagrams = new Set(course.lessons.map((lesson) => lesson.diagramId).filter(Boolean)).size;
+  const harnessCount = harnessOrder.length;
+  const moduleCount = course.modules.length;
 
-  const lastVisit = formatDate(progress.lastVisitedAt)
+  const lastVisit = formatDate(progress.lastVisitedAt);
 
   return (
     <div className="page-stack">
@@ -55,8 +55,8 @@ export function DashboardPage({
             <span>not vague autonomy.</span>
           </h1>
           <p className="hero-lede">
-            Work the agent loop, harness selection, instruction files, workflow design, safety gates, and capstone
-            automations &mdash; using Codex, Claude Cowork, OpenClaw, NemoClaw, and Hermes as worked examples.
+            Master agent loop design, harness selection, instruction file patterns, workflow architecture, and
+            safety gates using five agentic harnesses: Codex, Claude Cowork, OpenClaw, NemoClaw, and Hermes.
           </p>
           <div className="hero-actions">
             {resumeLesson && resumeModule && (
@@ -126,11 +126,11 @@ export function DashboardPage({
 
       <div className="module-list">
         {course.modules.map((module, index) => {
-          const lessons = lessonsForModule(course, module.id)
-          const doneCount = lessons.filter((lesson) => completed.has(lesson.id)).length
-          const pct = lessons.length > 0 ? Math.round((doneCount / lessons.length) * 100) : 0
-          const firstLesson = lessons[0]
-          const target = firstLesson ? lessonPath(module, firstLesson) : '/lessons'
+          const lessons = lessonsForModule(course, module.id);
+          const doneCount = lessons.filter((lesson) => completed.has(lesson.id)).length;
+          const pct = lessons.length > 0 ? Math.round((doneCount / lessons.length) * 100) : 0;
+          const firstLesson = lessons[0];
+          const target = firstLesson ? lessonPath(module, firstLesson) : '/lessons';
 
           return (
             <Link className="module-row" to={target} key={module.id}>
@@ -149,17 +149,17 @@ export function DashboardPage({
                 <ArrowRight className="icon" />
               </div>
             </Link>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
 
 function formatDate(value: string) {
-  const date = new Date(value)
+  const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    return '—'
+    return '—';
   }
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
