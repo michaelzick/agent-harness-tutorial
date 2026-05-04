@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../src/App'
 import { course } from '../src/data/course'
@@ -47,6 +47,33 @@ describe('Agent Harness Tutorial app', () => {
     expect(screen.getAllByText('Real Estate Agent Marketing and Outreach Funnel').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Codex Workflow Operating Model').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Build a Multi-Harness Agentic Automation System').length).toBeGreaterThan(0)
+  })
+
+  it('smooth-scrolls to the top when navigating from the sidebar', async () => {
+    const scrollTo = vi.spyOn(window, 'scrollTo')
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('link', { name: 'Lessons' }))
+
+    await waitFor(() => {
+      expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'smooth' })
+    })
+    expect(screen.getByText('Agentic automation course')).toBeInTheDocument()
+  })
+
+  it('smooth-scrolls to the top after navigating from a lesson to Overview', async () => {
+    window.history.pushState({}, '', firstLessonPath())
+    const scrollTo = vi.spyOn(window, 'scrollTo')
+    render(<App />)
+    scrollTo.mockClear()
+
+    fireEvent.click(screen.getByRole('link', { name: 'Overview' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { level: 1, name: /Design useful agents,\s*not vague autonomy\./ }))
+        .toBeInTheDocument()
+      expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'smooth' })
+    })
   })
 
   it('does not crash when localStorage contains malformed progress', () => {

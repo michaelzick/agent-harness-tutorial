@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import type { Course, ProgressState } from '../types/course'
 import { calculatePercentComplete } from '../lib/progress'
@@ -36,6 +36,7 @@ export function CourseLayout({
 }) {
   const location = useLocation()
   const [menuState, setMenuState] = useState({ open: false, pathname: location.pathname })
+  const pendingScrollPathRef = useRef<string | null>(null)
   const [outlineHandler, setOutlineHandlerState] = useState<(() => void) | null>(null)
   const percent = calculatePercentComplete(progress, course.lessons)
   const completedCount = course.lessons.filter((lesson) => completed.has(lesson.id)).length
@@ -48,6 +49,26 @@ export function CourseLayout({
     [],
   )
   const menuOpen = menuState.open && menuState.pathname === location.pathname
+
+  useEffect(() => {
+    if (pendingScrollPathRef.current !== location.pathname) {
+      return
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    pendingScrollPathRef.current = null
+  }, [location.pathname])
+
+  function handleSidebarNavigate(to: string) {
+    setMenuState((current) => ({ ...current, open: false }))
+
+    if (to === location.pathname) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      return
+    }
+
+    pendingScrollPathRef.current = to
+  }
 
   function isActive(link: { to: string; matchPrefix?: string; end?: boolean }) {
     if (link.end) {
@@ -67,6 +88,7 @@ export function CourseLayout({
       total={course.lessons.length}
       lastVisitedAt={progress.lastVisitedAt}
       onResetProgress={onResetProgress}
+      onNavigate={handleSidebarNavigate}
     />
   )
 
@@ -103,6 +125,7 @@ function SidebarContents({
   total,
   lastVisitedAt,
   onResetProgress,
+  onNavigate,
 }: {
   isActive: (link: { to: string; matchPrefix?: string; end?: boolean }) => boolean
   percent: number
@@ -110,6 +133,7 @@ function SidebarContents({
   total: number
   lastVisitedAt: string
   onResetProgress: () => void
+  onNavigate: (to: string) => void
 }) {
   return (
     <>
@@ -127,6 +151,7 @@ function SidebarContents({
               to={link.to}
               end={link.end}
               className={() => (isActive(link) ? 'active' : undefined)}
+              onClick={() => onNavigate(link.to)}
             >
               {link.label}
             </NavLink>
@@ -142,6 +167,7 @@ function SidebarContents({
               key={link.to}
               to={link.to}
               className={() => (isActive(link) ? 'active' : undefined)}
+              onClick={() => onNavigate(link.to)}
             >
               {link.label}
             </NavLink>
