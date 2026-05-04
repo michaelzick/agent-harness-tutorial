@@ -12,7 +12,9 @@
     "check": "tsc -b --noEmit",
     "lint": "eslint .",
     "test": "vitest --run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "agent-briefs:sync": "node skills/sync-agent-briefs/scripts/sync.mjs",
+    "agent-briefs:check": "node skills/sync-agent-briefs/scripts/check.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
