@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../src/App'
 import { course } from '../src/data/course'
@@ -71,19 +71,18 @@ describe('Agent Harness Tutorial app', () => {
     expect(stored.completedLessonIds).toContain(course.lessons[0].id)
   })
 
-  it('records checkpoint completion', () => {
+  it('renders static key concept squares instead of a checkpoint in the lesson sidebar', () => {
     window.history.pushState({}, '', firstLessonPath())
-    render(<App />)
+    const { container } = render(<App />)
 
-    const checkpoint = screen.getByText(/What is the strongest operational takeaway/i).closest('section')
-    if (!checkpoint) {
-      throw new Error('checkpoint not found')
-    }
-    fireEvent.click(within(checkpoint).getByRole('button', { name: /Turn agent loop into explicit/i }))
+    expect(screen.getByText('Key concepts')).toBeInTheDocument()
+    expect(container.querySelectorAll('.key-concept-square')).toHaveLength(3)
+    expect(screen.getByText(/An agentic system observes state/i)).toBeInTheDocument()
+    expect(screen.queryByText(/What is the strongest operational takeaway/i)).toBeNull()
+    expect(screen.queryByRole('button', { name: /Turn agent loop into explicit/i })).toBeNull()
 
-    expect(screen.getByText(/Correct./i)).toBeInTheDocument()
     const stored = JSON.parse(window.localStorage.getItem(PROGRESS_STORAGE_KEY) ?? '{}')
-    expect(stored.checkpointResults[course.lessons[0].checkpoint.id]).toBe(true)
+    expect(stored.checkpointResults).toEqual({})
   })
 
   it('resets progress from the sidebar', () => {

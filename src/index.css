@@ -2110,6 +2110,33 @@ tr:last-child th {
   font-size: 0.875rem;
 }
 
+.key-concepts-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.key-concept-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.key-concept-square {
+  border: 1px solid var(--hair);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-soft);
+  padding: 0.65rem 0.75rem;
+  min-height: 5.25rem;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  line-height: 1.4;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
 .checkpoint-options {
   display: flex;
   flex-direction: column;

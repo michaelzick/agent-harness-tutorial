@@ -13,7 +13,11 @@ export const capstoneModules: ModuleInput[] = [
         summary: 'Create a repeatable repo automation with `AGENTS.md`, scoped prompts, tests, and review handoff.',
         diagramId: 'codex-loop',
         objectives: ['Design a Codex task packet.', 'Add repo instruction files.', 'Define verification and review gates.'],
-        keyConcepts: ['Codex', 'repo workflow', 'tests', 'review'],
+        keyConcepts: [
+          'The Codex capstone should produce a scoped repo workflow with clear instructions and review boundaries.',
+          'The repo workflow needs a task packet, context files, implementation steps, and a handoff artifact.',
+          'Tests and diff review are the acceptance gate before the workflow is considered complete.',
+        ],
         sections: [
           {
             kind: 'capstone',
@@ -46,7 +50,11 @@ export const capstoneModules: ModuleInput[] = [
         summary: 'Create a Cowork project that turns messy product input into a PRD, risks, and execution prompts.',
         diagramId: 'claude-cowork-loop',
         objectives: ['Set up a Cowork project folder.', 'Write project instructions.', 'Produce reviewable planning artifacts.'],
-        keyConcepts: ['Cowork', 'PRD', 'project folder', 'planning'],
+        keyConcepts: [
+          'The Cowork capstone turns messy product input into structured planning artifacts.',
+          'A strong PRD should capture goals, constraints, risks, open questions, and execution prompts.',
+          'Planning output should be reviewable before it drives implementation or downstream automation.',
+        ],
         sections: [
           {
             kind: 'capstone',
@@ -74,7 +82,11 @@ export const capstoneModules: ModuleInput[] = [
         summary: 'Create a read-only browser skill that checks a dashboard and reports failures.',
         diagramId: 'openclaw-clawhub-flow',
         objectives: ['Write a workspace skill.', 'Define browser boundaries.', 'Create a report and stop rule.'],
-        keyConcepts: ['OpenClaw', 'browser automation', 'SKILL.md', 'read-only'],
+        keyConcepts: [
+          'The OpenClaw capstone should package a browser automation as a reviewed workspace skill.',
+          'Browser automation must name the page, evidence to collect, and actions that are out of bounds.',
+          'Read-only mode is the safe default until reporting quality and stop rules are proven.',
+        ],
         sections: [
           {
             kind: 'capstone',
@@ -103,7 +115,11 @@ export const capstoneModules: ModuleInput[] = [
         summary: 'Move a risky OpenClaw-style workflow behind sandbox, policy, approval, and logs.',
         diagramId: 'nemoclaw-sandbox-policy',
         objectives: ['Define sandbox prerequisites.', 'Write policy and approval gates.', 'Validate logging and denial paths.'],
-        keyConcepts: ['NemoClaw', 'sandbox', 'policy', 'audit'],
+        keyConcepts: [
+          'The NemoClaw-style capstone moves a risky flow behind sandbox, policy, approval, and logs.',
+          'The sandbox should make denied actions and allowed actions visible during validation.',
+          'Policy should define tool scope, network limits, approval packets, and audit requirements.',
+        ],
         sections: [
           {
             kind: 'capstone',
@@ -132,7 +148,11 @@ export const capstoneModules: ModuleInput[] = [
         summary: 'Create a repeatable Hermes skill and workflow for business planning with approval gates.',
         diagramId: 'hermes-skill-memory-loop',
         objectives: ['Write a Hermes skill.', 'Define workflow inputs and outputs.', 'Add review gates before publication.'],
-        keyConcepts: ['Hermes', 'workflow skill', 'marketing funnel', 'review gate'],
+        keyConcepts: [
+          'The Hermes capstone turns a marketing funnel into a repeatable workflow skill.',
+          'The workflow skill should define inputs, stages, outputs, memory use, and weekly improvement.',
+          'A review gate keeps drafts from becoming external business actions without approval.',
+        ],
         sections: [
           {
             kind: 'capstone',
@@ -161,7 +181,11 @@ export const capstoneModules: ModuleInput[] = [
         summary: 'Combine all five harnesses into a CTO-level architecture with clear ownership and risk controls.',
         diagramId: 'multi-harness-stack',
         objectives: ['Assign harness ownership by workflow stage.', 'Create handoff artifacts.', 'Define enterprise controls and metrics.'],
-        keyConcepts: ['multi-harness system', 'handoff', 'enterprise controls', 'CTO architecture'],
+        keyConcepts: [
+          'The final capstone assigns each harness to the workflow stage where it has the strongest operating loop.',
+          'Handoff artifacts connect planning, code, workflow execution, dashboard checks, and governance.',
+          'Enterprise controls define identity, policy, observability, approvals, and rollout ownership.',
+        ],
         sections: [
           {
             kind: 'capstone',

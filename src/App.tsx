@@ -27,7 +27,6 @@ function TutorApp() {
     completed,
     markLessonComplete,
     setCurrentLesson,
-    setCheckpointResult,
     resetProgress,
   } = useProgress(course.lessons, course.modules)
 
@@ -74,10 +73,8 @@ function TutorApp() {
             <LessonPage
               course={course}
               completed={completed}
-              checkpointResults={progress.checkpointResults}
               onVisit={handleVisit}
               onComplete={handleComplete}
-              onCheckpoint={setCheckpointResult}
             />
           }
         />

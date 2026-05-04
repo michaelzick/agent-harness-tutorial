@@ -18,7 +18,11 @@ export const foundationModules: ModuleInput[] = [
           'Explain why tool use and feedback matter more than chat quality alone.',
           'Name the boundary where an agent must stop or escalate.',
         ],
-        keyConcepts: ['agent loop', 'delegation', 'feedback', 'stop condition'],
+        keyConcepts: [
+          'An agentic system observes state, chooses a next step, acts with tools, checks the result, and decides whether to continue.',
+          'Delegation is only useful when the task, context, allowed tools, and expected result are explicit.',
+          'A stop condition is part of the design. The agent must know when to ask, halt, or escalate.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -66,7 +70,11 @@ export const foundationModules: ModuleInput[] = [
           'Identify when deterministic scripts are preferable.',
           'Explain why copilots and agents need different safety expectations.',
         ],
-        keyConcepts: ['chatbot', 'copilot', 'workflow', 'agent'],
+        keyConcepts: [
+          'A chatbot answers in conversation, but it does not own tool use or verification.',
+          'A copilot helps while the human stays in continuous control of the work.',
+          'A workflow follows predefined steps; an agent chooses actions from state and feedback.',
+        ],
         sections: [
           {
             kind: 'comparison',
@@ -113,7 +121,11 @@ export const foundationModules: ModuleInput[] = [
           'Decide what should be logged at each stage.',
           'Design retries and memory updates without creating runaway behavior.',
         ],
-        keyConcepts: ['observe', 'plan', 'act', 'check', 'memory'],
+        keyConcepts: [
+          'Observe, plan, and act should be visible stages, not hidden model behavior.',
+          'The check step compares the result to an expectation before the agent continues.',
+          'Memory should persist reusable facts or procedures only after the result is verified.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -163,7 +175,11 @@ export const foundationModules: ModuleInput[] = [
           'Explain why tool permissions are product design, not just security settings.',
           'Choose where a harness should store workspace rules.',
         ],
-        keyConcepts: ['context', 'memory', 'tools', 'permissions'],
+        keyConcepts: [
+          'Context is what the agent sees now; memory is what survives into future work.',
+          'Tools are the way an agent changes the world, so they need product-level boundaries.',
+          'Permissions should be designed before tool access, especially for external or destructive actions.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -220,7 +236,11 @@ export const foundationModules: ModuleInput[] = [
           'Use feature comparison instead of vendor preference.',
           'Identify when harnesses should be combined rather than forced into one tool.',
         ],
-        keyConcepts: ['harness comparison', 'tool surface', 'verification loop', 'governance'],
+        keyConcepts: [
+          'Compare harnesses by the work surface they operate on, not by model preference alone.',
+          'The right harness exposes the tools, files, connectors, or runtime the task actually needs.',
+          'Verification and governance decide whether a harness is safe enough for the workflow.',
+        ],
         sections: [
           featureMatrixSection(),
           {
@@ -254,7 +274,11 @@ export const foundationModules: ModuleInput[] = [
           'Split planning, execution, and governance into separate stages.',
           'Define when a task should not use an agent.',
         ],
-        keyConcepts: ['decision tree', 'artifact', 'risk', 'handoff'],
+        keyConcepts: [
+          'Start harness selection by naming the finished artifact and how it will be checked.',
+          'Risk determines how much approval, sandboxing, or human review the workflow needs.',
+          'Clean handoff artifacts let planning, execution, and governance live in separate stages.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -297,7 +321,11 @@ export const foundationModules: ModuleInput[] = [
           'Define handoff artifacts between harnesses.',
           'Avoid mixing responsibilities inside one prompt.',
         ],
-        keyConcepts: ['multi-harness stack', 'handoff', 'orchestration', 'review'],
+        keyConcepts: [
+          'A multi-harness stack works best when each harness owns one clear stage of the workflow.',
+          'Each stage should produce a concrete handoff artifact the next stage can inspect.',
+          'Review gates keep planning tools from silently turning into risky execution tools.',
+        ],
         sections: [
           {
             kind: 'text',

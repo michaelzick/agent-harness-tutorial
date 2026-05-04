@@ -25,6 +25,16 @@ describe('course data integrity', () => {
     }
   })
 
+  it('gives every lesson exactly three key concepts', () => {
+    for (const lesson of course.lessons) {
+      expect(lesson.keyConcepts, lesson.title).toHaveLength(3)
+      for (const concept of lesson.keyConcepts) {
+        expect(concept.trim().split(/\s+/).length, `${lesson.title}: ${concept}`).toBeGreaterThanOrEqual(6)
+        expect(/[.!?]$/.test(concept), `${lesson.title}: ${concept}`).toBe(true)
+      }
+    }
+  })
+
   it('gives every harness section setup and reusable operating content', () => {
     const harnessModules = course.modules.filter((module) => module.track === 'harness' && module.harnessId)
 
