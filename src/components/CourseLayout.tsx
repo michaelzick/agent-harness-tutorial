@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import type { Course, ProgressState } from '../types/course'
 import { calculatePercentComplete } from '../lib/progress'
@@ -6,6 +6,7 @@ import { ProgressBar } from './ProgressBar'
 import { ResetProgressButton } from './ResetProgressButton'
 import { MobileDrawer } from './MobileDrawer'
 import { MobileTopBar } from './MobileTopBar'
+import { OutlineContext } from './OutlineContext'
 
 const COURSE_LINKS: Array<{ to: string; label: string; matchPrefix?: string; end?: boolean }> = [
   { to: '/', label: 'Overview', end: true },
@@ -34,13 +35,19 @@ export function CourseLayout({
   children: ReactNode
 }) {
   const location = useLocation()
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuState, setMenuState] = useState({ open: false, pathname: location.pathname })
+  const [outlineHandler, setOutlineHandlerState] = useState<(() => void) | null>(null)
   const percent = calculatePercentComplete(progress, course.lessons)
   const completedCount = course.lessons.filter((lesson) => completed.has(lesson.id)).length
-
-  useEffect(() => {
-    setMenuOpen(false)
-  }, [location.pathname])
+  const outlineContextValue = useMemo(
+    () => ({
+      setOutlineHandler: (handler: (() => void) | null) => {
+        setOutlineHandlerState(() => handler)
+      },
+    }),
+    [],
+  )
+  const menuOpen = menuState.open && menuState.pathname === location.pathname
 
   function isActive(link: { to: string; matchPrefix?: string; end?: boolean }) {
     if (link.end) {
@@ -64,23 +71,28 @@ export function CourseLayout({
   )
 
   return (
-    <div className="app-shell">
-      <aside className="app-sidebar">{sidebarContents}</aside>
+    <OutlineContext.Provider value={outlineContextValue}>
+      <div className="app-shell">
+        <aside className="app-sidebar">{sidebarContents}</aside>
 
-      <main className="main-shell">
-        <MobileTopBar onOpenMenu={() => setMenuOpen(true)} />
-        {children}
-      </main>
+        <main className="main-shell">
+          <MobileTopBar
+            onOpenMenu={() => setMenuState({ open: true, pathname: location.pathname })}
+            onOpenOutline={outlineHandler}
+          />
+          {children}
+        </main>
 
-      <MobileDrawer
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        side="left"
-        title="Menu"
-      >
-        {sidebarContents}
-      </MobileDrawer>
-    </div>
+        <MobileDrawer
+          open={menuOpen}
+          onClose={() => setMenuState((current) => ({ ...current, open: false }))}
+          side="left"
+          title="Menu"
+        >
+          {sidebarContents}
+        </MobileDrawer>
+      </div>
+    </OutlineContext.Provider>
   )
 }
 

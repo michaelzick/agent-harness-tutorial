@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { X } from 'lucide-react'
 
 export function MobileDrawer({
@@ -14,8 +14,25 @@ export function MobileDrawer({
   title: string
   children: ReactNode
 }) {
+  const [phase, setPhase] = useState<'closed' | 'open' | 'closing'>(open ? 'open' : 'closed')
+  const isClosing = phase === 'closing'
+
   useEffect(() => {
-    if (!open) {
+    let frame = 0
+
+    if (open && phase !== 'open') {
+      frame = requestAnimationFrame(() => setPhase('open'))
+    } else if (!open && phase === 'open') {
+      frame = requestAnimationFrame(() => setPhase('closing'))
+    }
+
+    return () => {
+      cancelAnimationFrame(frame)
+    }
+  }, [open, phase])
+
+  useEffect(() => {
+    if (phase === 'closed') {
       return
     }
 
@@ -42,20 +59,29 @@ export function MobileDrawer({
       desktopQuery.removeEventListener('change', handleDesktopChange)
       document.body.style.overflow = previousOverflow
     }
-  }, [open, onClose])
+  }, [phase, onClose])
 
-  if (!open) {
+  if (phase === 'closed') {
     return null
   }
 
   return (
     <>
-      <div className="mobile-drawer-backdrop" role="presentation" onClick={onClose} />
       <div
-        className={`mobile-drawer-panel ${side}`}
+        className={`mobile-drawer-backdrop${isClosing ? ' closing' : ''}`}
+        role="presentation"
+        onClick={onClose}
+      />
+      <div
+        className={`mobile-drawer-panel ${side}${isClosing ? ' closing' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}
+        onAnimationEnd={() => {
+          if (isClosing && !open) {
+            setPhase('closed')
+          }
+        }}
       >
         <div className="mobile-drawer-head">
           <span className="mobile-drawer-title">{title}</span>

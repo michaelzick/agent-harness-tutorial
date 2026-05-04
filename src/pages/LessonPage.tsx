@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { ListTree } from 'lucide-react'
 import { diagramById } from '../data/diagrams'
 import type { Course, Lesson, LessonSection, CourseModule } from '../types/course'
 import {
@@ -26,6 +25,7 @@ import { ImplementationLab } from '../components/ImplementationLab'
 import { FileTemplate } from '../components/FileTemplate'
 import { DecisionChecklist } from '../components/DecisionChecklist'
 import { WorkflowGuide } from '../components/WorkflowGuide'
+import { OutlineContext } from '../components/OutlineContext'
 import { MobileDrawer } from '../components/MobileDrawer'
 
 const PRACTICAL_EXAMPLE = 'Practical example'
@@ -51,13 +51,17 @@ export function LessonPage({
 }) {
   const { moduleSlug, lessonSlug } = useParams()
   const ref = findLessonRef(course, moduleSlug, lessonSlug)
-  const [outlineOpen, setOutlineOpen] = useState(false)
-
+  const [outlineState, setOutlineState] = useState({ open: false, lessonId: ref?.lesson.id })
+  const outlineCtx = useContext(OutlineContext)
   const lessonId = ref?.lesson.id
+  const outlineOpen = outlineState.open && outlineState.lessonId === lessonId
+
+  function closeOutline() {
+    setOutlineState((current) => ({ ...current, open: false }))
+  }
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
-    setOutlineOpen(false)
   }, [lessonId])
 
   useEffect(() => {
@@ -65,6 +69,17 @@ export function LessonPage({
       onVisit(lessonId)
     }
   }, [onVisit, lessonId])
+
+  useEffect(() => {
+    const openOutline = lessonId
+      ? () => {
+          setOutlineState({ open: true, lessonId })
+        }
+      : null
+
+    outlineCtx?.setOutlineHandler(openOutline)
+    return () => outlineCtx?.setOutlineHandler(null)
+  }, [lessonId, outlineCtx])
 
   if (!ref) {
     return <Navigate to="/lessons" replace />
@@ -197,19 +212,9 @@ export function LessonPage({
         </aside>
       </div>
 
-      <button
-        type="button"
-        className="lesson-outline-fab"
-        aria-label="Open lesson outline"
-        onClick={() => setOutlineOpen(true)}
-      >
-        <ListTree className="icon" />
-        <span>Outline</span>
-      </button>
-
       <MobileDrawer
         open={outlineOpen}
-        onClose={() => setOutlineOpen(false)}
+        onClose={closeOutline}
         side="right"
         title="On this page"
       >
@@ -223,7 +228,7 @@ export function LessonPage({
           checkpointResult={checkpointResults[lesson.checkpoint.id]}
           onComplete={onComplete}
           onCheckpoint={onCheckpoint}
-          onNavigate={() => setOutlineOpen(false)}
+          onNavigate={closeOutline}
         />
       </MobileDrawer>
     </div>

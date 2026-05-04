@@ -339,6 +339,7 @@ a:focus-visible {
 .mobile-topbar {
   display: none;
   align-items: center;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.85rem;
   position: sticky;
   top: 0;
@@ -374,6 +375,29 @@ a:focus-visible {
   flex-direction: column;
   gap: 0.1rem;
   line-height: 1.1;
+  min-width: 0;
+}
+
+.mobile-topbar-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--motion-fast) var(--ease-soft);
+}
+
+.mobile-topbar-outline:hover {
+  background: oklch(0.82 0.14 70);
 }
 
 /* Mobile drawer */
@@ -474,30 +498,31 @@ a:focus-visible {
   to { transform: translateX(0); }
 }
 
-/* Lesson outline FAB (hidden on desktop) */
-.lesson-outline-fab {
-  display: none;
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 5;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
-  border: 0;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  cursor: pointer;
-  box-shadow: 0 6px 24px oklch(0 0 0 / 0.35);
-  transition: background var(--motion-fast) var(--ease-soft);
+@keyframes drawer-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
-.lesson-outline-fab:hover {
-  background: oklch(0.82 0.14 70);
+@keyframes drawer-slide-left-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes drawer-slide-right-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+.mobile-drawer-backdrop.closing {
+  animation: drawer-fade-out var(--motion-fast) var(--ease-soft) forwards;
+}
+
+.mobile-drawer-panel.left.closing {
+  animation: drawer-slide-left-out var(--motion-fast) var(--ease-soft) forwards;
+}
+
+.mobile-drawer-panel.right.closing {
+  animation: drawer-slide-right-out var(--motion-fast) var(--ease-soft) forwards;
 }
 
 .page-stack {
@@ -2208,15 +2233,11 @@ tr:last-child th {
   }
 
   .mobile-topbar {
-    display: flex;
+    display: grid;
   }
 
   .lesson-side {
     display: none;
-  }
-
-  .lesson-outline-fab {
-    display: inline-flex;
   }
 
   .main-shell {
