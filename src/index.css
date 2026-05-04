@@ -389,7 +389,7 @@ a:focus-visible {
 }
 
 .hero-eyebrow {
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.6rem;
 }
 
 .dashboard-hero h1 {
@@ -709,7 +709,7 @@ a:focus-visible {
 }
 
 .page-header h1 {
-  margin: 0.875rem 0 0;
+  margin: 1.3rem 0 0;
   max-width: 620px;
 }
 
@@ -909,7 +909,7 @@ a:focus-visible {
 
 .lesson-header h1 {
   font-size: clamp(2rem, 3.5vw, 3.25rem);
-  margin: 0.875rem 0 1.125rem;
+  margin: 1.3rem 0 1.125rem;
   max-width: 720px;
 }
 
@@ -1671,6 +1671,17 @@ tr:last-child th {
 .capstone-panel h2 {
   margin: 0;
   font-size: 1.45rem;
+}
+
+.setup-guide .eyebrow,
+.skill-recipe .eyebrow,
+.interview-rubric .eyebrow,
+.implementation-lab .eyebrow,
+.file-template .eyebrow,
+.decision-checklist .eyebrow,
+.workflow-guide .eyebrow,
+.capstone-panel .eyebrow {
+  margin-bottom: 0.35rem;
 }
 
 .setup-step-list,
