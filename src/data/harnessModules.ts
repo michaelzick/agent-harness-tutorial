@@ -33,7 +33,11 @@ export const harnessModules: ModuleInput[] = [
           'Map a product request into a scoped implementation task.',
           'Describe the Codex patch/test/review loop.',
         ],
-        keyConcepts: ['repo-grounded work', 'diff review', 'tests', 'worktree'],
+        keyConcepts: [
+          'Codex is strongest when the work is grounded in a repository and ends as an inspectable diff.',
+          'Diff review is the control surface; the human should be able to see exactly what changed.',
+          'Tests and local checks are the feedback loop that keep code automation from becoming guesswork.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -85,7 +89,11 @@ export const harnessModules: ModuleInput[] = [
           'Validate the first run without making changes.',
           'Create a short `AGENTS.md` that points to deeper source-of-truth docs.',
         ],
-        keyConcepts: ['CLI setup', 'authentication', 'AGENTS.md', 'repo map'],
+        keyConcepts: [
+          'A safe Codex setup starts with authentication, workspace access, and a harmless first run.',
+          '`AGENTS.md` should point Codex to the repo rules, commands, and review expectations.',
+          'The repo map helps Codex find the right files without loading unnecessary context.',
+        ],
         sections: [
           setupGuideSection(
             'Codex setup lab',
@@ -142,7 +150,11 @@ export const harnessModules: ModuleInput[] = [
           'Separate planning from editing when the task is ambiguous.',
           'Require verification that matches the change.',
         ],
-        keyConcepts: ['prompt design', 'implementation plan', 'verification', 'handoff'],
+        keyConcepts: [
+          'A strong Codex prompt names the goal, files, constraints, and verification path.',
+          'Ambiguous tasks should produce an implementation plan before edits begin.',
+          'Verification should match the change, using tests, type checks, lint, or focused manual review.',
+        ],
         sections: [
           {
             kind: 'comparison',
@@ -185,7 +197,11 @@ export const harnessModules: ModuleInput[] = [
           'Define what a human reviewer must inspect.',
           'Design rollback and handoff expectations.',
         ],
-        keyConcepts: ['review boundary', 'regression risk', 'rollback', 'human approval'],
+        keyConcepts: [
+          'The review boundary defines what Codex may change and what a human must inspect.',
+          'Regression risk rises when changes cross shared behavior, data contracts, or user flows.',
+          'Rollback expectations should be clear before a risky patch is accepted.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -237,7 +253,11 @@ export const harnessModules: ModuleInput[] = [
           'Choose tasks that benefit from local files and extended execution.',
           'Define project instructions and connected-folder boundaries.',
         ],
-        keyConcepts: ['project folders', 'connectors', 'instructions', 'collaboration'],
+        keyConcepts: [
+          'Claude Cowork is useful when local project folders and connected context shape a planning artifact.',
+          'Connectors expand context, but they also expand the review and permission surface.',
+          'Project instructions should define the role, sources of truth, and expected deliverables.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -284,7 +304,11 @@ export const harnessModules: ModuleInput[] = [
           'Choose global vs project instructions.',
           'Install and customize plugins safely.',
         ],
-        keyConcepts: ['desktop app', 'folder access', 'plugins', 'permission mode'],
+        keyConcepts: [
+          'Cowork setup starts by choosing which local folders the project is allowed to use.',
+          'Permission mode should match the sensitivity of files, connectors, and requested actions.',
+          'Plugins should be installed only after their data access and behavior are reviewed.',
+        ],
         sections: [
           setupGuideSection(
             'Claude Cowork setup lab',
@@ -333,7 +357,11 @@ Approval rules:
           'Decide when a repeatable process belongs in a skill.',
           'Review plugins before using them with sensitive files.',
         ],
-        keyConcepts: ['plugins', 'skills', 'connectors', 'marketplace'],
+        keyConcepts: [
+          'Plugins connect Cowork to external systems, so they require data-access review.',
+          'Skills turn repeated work into a reusable procedure with clearer activation rules.',
+          'Marketplace content should be treated like supply-chain input, not trusted by default.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -383,7 +411,11 @@ description: Synthesize local research files into a decision memo with cited sou
           'Set approval expectations for file and connector actions.',
           'Explain enterprise limitations and monitoring needs.',
         ],
-        keyConcepts: ['folder boundary', 'connector risk', 'permission mode', 'enterprise controls'],
+        keyConcepts: [
+          'Folder boundaries keep Cowork from mixing unrelated or sensitive project context.',
+          'Connector risk increases when the agent can read or act across business systems.',
+          'Enterprise rollout needs identity, logging, approval modes, and clear ownership.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -446,7 +478,11 @@ description: Synthesize local research files into a decision memo with cited sou
           'Choose safe local automation tasks.',
           'Separate workspace skills from general prompting.',
         ],
-        keyConcepts: ['gateway', 'runtime', 'local tools', 'workspace skills'],
+        keyConcepts: [
+          'OpenClaw acts as a local gateway between the model, workspace tools, and operator requests.',
+          'The runtime matters because browser, shell, and filesystem actions create real side effects.',
+          'Workspace skills should describe repeatable procedures and the boundaries around them.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -493,7 +529,11 @@ description: Synthesize local research files into a decision memo with cited sou
           'Validate a safe onboarding flow.',
           'Use ClawHub for skills only after review.',
         ],
-        keyConcepts: ['installer', 'onboarding', 'daemon', 'ClawHub'],
+        keyConcepts: [
+          'OpenClaw setup should validate the installer, daemon, workspace, and first safe action.',
+          'The daemon needs clear permission boundaries before local tools are exposed.',
+          'ClawHub skills should be reviewed before installation, especially when they use browser or shell tools.',
+        ],
         sections: [
           setupGuideSection(
             'OpenClaw setup lab',
@@ -546,7 +586,11 @@ description: Synthesize local research files into a decision memo with cited sou
           'Review third-party skill files before installation.',
           'Write a useful workspace skill.',
         ],
-        keyConcepts: ['ClawHub', 'SKILL.md', 'workspace skills', 'skill review'],
+        keyConcepts: [
+          'ClawHub is a distribution path for skills, but skill files still need human review.',
+          '`SKILL.md` should explain when the skill triggers, what it may access, and when it must stop.',
+          'A good skill review checks tool scope, examples, safety notes, and failure behavior.',
+        ],
         sections: [
           {
             kind: 'skillRecipe',
@@ -596,7 +640,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Design read-only and approval-first workflows.',
           'Create escalation rules for browser and shell automation.',
         ],
-        keyConcepts: ['permission boundary', 'browser risk', 'shell risk', 'prompt injection'],
+        keyConcepts: [
+          'OpenClaw permission boundaries should separate read-only inspection from actions that change state.',
+          'Browser and shell access can affect real systems, so approvals need to be explicit.',
+          'Prompt injection is a live risk when pages, files, or messages can instruct the agent.',
+        ],
         sections: [
           {
             kind: 'decisionChecklist',
@@ -644,7 +692,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Name early-preview caveats.',
           'Identify when a personal OpenClaw workflow should move behind stronger controls.',
         ],
-        keyConcepts: ['sandbox', 'policy layer', 'routed inference', 'early preview'],
+        keyConcepts: [
+          'NemoClaw-style workflows move risky agent actions into a sandboxed execution boundary.',
+          'The policy layer decides which tools, network paths, and actions are allowed.',
+          'Routed inference can send different tasks through different controls based on risk.',
+        ],
         sections: [
           {
             kind: 'callout',
@@ -698,7 +750,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Install and onboard NemoClaw safely.',
           'Run a harmless sandbox validation task.',
         ],
-        keyConcepts: ['Docker', 'onboarding', 'sandbox', 'logs'],
+        keyConcepts: [
+          'A NemoClaw setup should prove the Docker runtime and sandbox boundary before real tasks run.',
+          'Sandbox validation should use harmless inputs that make allowed and blocked actions visible.',
+          'Logs are part of the product surface because operators need to audit what the agent did.',
+        ],
         sections: [
           setupGuideSection(
             'NemoClaw setup lab',
@@ -736,7 +792,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Define sandbox boundaries for tools and network access.',
           'Use logs as part of the product surface.',
         ],
-        keyConcepts: ['policy', 'sandbox hardening', 'network egress', 'audit'],
+        keyConcepts: [
+          'Policy files should make allowed tools, denied actions, and approval gates enforceable.',
+          'Sandbox hardening limits filesystem, process, secret, and network exposure.',
+          'Audit logs should explain the action, decision, input summary, and approval status.',
+        ],
         sections: [
           {
             kind: 'fileTemplate',
@@ -797,7 +857,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Decide when to graduate a workflow into a sandboxed runtime.',
           'Explain the extra operational cost of guardrails.',
         ],
-        keyConcepts: ['OpenClaw', 'NemoClaw', 'graduation path', 'governance'],
+        keyConcepts: [
+          'OpenClaw is a practical local automation surface for lower-risk workstation workflows.',
+          'NemoClaw-style controls are better when risky workflows need sandboxing and policy enforcement.',
+          'Governance cost is justified when the workflow can affect sensitive data, systems, or users.',
+        ],
         sections: [
           {
             kind: 'comparison',
@@ -849,7 +913,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Choose workflows that benefit from skill and memory loops.',
           'Define when a Hermes workflow needs review gates.',
         ],
-        keyConcepts: ['workflow orchestration', 'skills', 'memory', 'gateway'],
+        keyConcepts: [
+          'Hermes is built around repeatable workflow orchestration rather than one-off answers.',
+          'Skills encode the procedure so the same business process can run consistently.',
+          'Memory should support future workflow runs without preserving stale or unreviewed facts.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -896,7 +964,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Configure model, tools, and gateway paths.',
           'Validate the setup with `hermes doctor` before real workflows.',
         ],
-        keyConcepts: ['installer', 'setup wizard', 'tools', 'gateway'],
+        keyConcepts: [
+          'Hermes setup should connect the installer, setup wizard, tools, and gateway before live use.',
+          'The setup wizard should capture the workflow assumptions and tool boundaries.',
+          'The gateway controls which local or external actions Hermes can route into the workflow.',
+        ],
         sections: [
           setupGuideSection(
             'Hermes setup lab',
@@ -931,7 +1003,11 @@ description: Inspect a dashboard in read-only mode and summarize failed jobs wit
           'Write a workflow skill with clear trigger and verification.',
           'Control gateway and memory behavior.',
         ],
-        keyConcepts: ['Hermes skills', 'external skill dirs', 'procedural memory', 'gateway'],
+        keyConcepts: [
+          'Hermes skills should describe the workflow trigger, steps, review gate, and expected output.',
+          'Procedural memory is useful when it stores the reviewed way to run a recurring process.',
+          'Gateway controls keep workflow execution aligned with approved tools and destinations.',
+        ],
         sections: [
           {
             kind: 'skillRecipe',
@@ -981,7 +1057,11 @@ description: Build a complete marketing funnel from offer, audience, pain points
           'Set review gates for content and business outputs.',
           'Design scheduled tasks that are observable and reversible.',
         ],
-        keyConcepts: ['review gate', 'scheduled automation', 'business process', 'rollback'],
+        keyConcepts: [
+          'A review gate keeps generated business outputs from becoming published or sent actions automatically.',
+          'Scheduled automation needs logs, owner visibility, and a clear success or failure report.',
+          'Rollback matters because business workflows can create customer-facing mistakes.',
+        ],
         sections: [
           {
             kind: 'decisionChecklist',

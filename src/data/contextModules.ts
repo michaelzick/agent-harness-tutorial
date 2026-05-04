@@ -18,7 +18,11 @@ export const contextModules: ModuleInput[] = [
           'Resolve conflicts without relying on vibes.',
           'Keep durable context small and navigable.',
         ],
-        keyConcepts: ['instruction hierarchy', 'context assembly', 'conflict resolution', 'durable context'],
+        keyConcepts: [
+          'Instruction hierarchy decides which rule wins when system, repo, workspace, and user guidance conflict.',
+          'Context assembly should load the smallest useful set of files, rules, examples, and task details.',
+          'Conflict resolution must be explicit so the agent does not improvise between competing instructions.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -75,7 +79,11 @@ export const contextModules: ModuleInput[] = [
           'Write strong starter files.',
           'Avoid conflicts between identity, repo rules, and task prompts.',
         ],
-        keyConcepts: ['AGENTS.md', 'CLAUDE.md', 'SOUL.md', 'repo instructions'],
+        keyConcepts: [
+          '`AGENTS.md` should tell code agents how to work safely inside the repository.',
+          '`CLAUDE.md` and `SOUL.md` can define project identity, collaboration style, and durable preferences.',
+          'Repo instructions should point to source-of-truth docs instead of duplicating everything.',
+        ],
         sections: [
           fileTemplate(
             '`SOUL.md` starter',
@@ -172,7 +180,11 @@ export const contextModules: ModuleInput[] = [
           'Write approval and memory rules that can be enforced.',
           'Prevent instruction conflicts and stale memory.',
         ],
-        keyConcepts: ['POLICY.md', 'TOOLS.md', 'MEMORY.md', 'USER.md', 'BOOTSTRAP.md', 'PROMPT.md'],
+        keyConcepts: [
+          'Policy files describe approval gates and actions the agent may not perform alone.',
+          'Tool and memory files define what the agent can touch and what it may preserve across runs.',
+          'Bootstrap prompts should assemble the right instructions without turning every rule into one giant prompt.',
+        ],
         sections: [
           {
             kind: 'comparison',
@@ -240,7 +252,11 @@ export const contextModules: ModuleInput[] = [
           'Choose between instructions, skills, and prompts.',
           'Write discoverable skill descriptions.',
         ],
-        keyConcepts: ['SKILL.md', 'progressive disclosure', 'trigger', 'procedure'],
+        keyConcepts: [
+          '`SKILL.md` packages a repeatable procedure so the agent can invoke it at the right time.',
+          'Progressive disclosure keeps the trigger light while loading detailed instructions only when needed.',
+          'A useful skill names inputs, steps, expected output, review checks, and safety limits.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -292,7 +308,11 @@ description: Create a concise incident summary from logs, notes, and timeline ev
           'Review skills before installation.',
           'Design an internal marketplace policy.',
         ],
-        keyConcepts: ['ClawHub', 'Claude plugin marketplace', 'internal registry', 'supply chain'],
+        keyConcepts: [
+          'Skill marketplaces make reuse easier, but every installed skill adds trust and maintenance risk.',
+          'An internal registry lets teams approve, version, and retire skills in a controlled way.',
+          'Supply-chain review should cover skill code, prompts, dependencies, permissions, and update paths.',
+        ],
         sections: [
           {
             kind: 'comparison',
@@ -330,7 +350,11 @@ description: Create a concise incident summary from logs, notes, and timeline ev
           'Use supporting files for progressive disclosure.',
           'Test skill activation and output quality.',
         ],
-        keyConcepts: ['skill authoring', 'YAML frontmatter', 'supporting files', 'testing'],
+        keyConcepts: [
+          'Skill authoring starts with a narrow trigger and a procedure that is worth repeating.',
+          'Supporting files should hold examples, templates, or references that would clutter the main skill.',
+          'Testing should prove the skill activates correctly and produces reviewable output.',
+        ],
         sections: [
           {
             kind: 'implementationLab',
@@ -394,7 +418,11 @@ allowed-tools: Read, Grep, Glob
           'Define a local workspace structure.',
           'Separate read-only automation from actions that need approval.',
         ],
-        keyConcepts: ['workstation', 'local workspace', 'personal skills', 'approval'],
+        keyConcepts: [
+          'A personal workstation stack should start with local, low-risk workflows before broader autonomy.',
+          'Personal skills are most valuable when they encode repetitive work you already understand.',
+          'Approval is still required before sending messages, spending money, deleting data, or changing shared systems.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -431,7 +459,11 @@ allowed-tools: Read, Grep, Glob
           'Write useful examples for personal automation.',
           'Keep personal skills safe and narrow.',
         ],
-        keyConcepts: ['personal skills', 'repeatable workflow', 'examples', 'review'],
+        keyConcepts: [
+          'Good personal skills handle specific recurring jobs instead of vague productivity wishes.',
+          'A repeatable workflow needs stable inputs, expected outputs, and a clear stop rule.',
+          'Review keeps personal automation useful by catching bad assumptions before action.',
+        ],
         sections: [
           {
             kind: 'comparison',
@@ -492,7 +524,11 @@ description: Turn receipt files into a draft expense report. Use for receipts, r
           'Separate experimentation from production deployment.',
           'Name the governance components a CTO must own.',
         ],
-        keyConcepts: ['control plane', 'identity', 'policy', 'observability'],
+        keyConcepts: [
+          'The enterprise control plane owns policy, identity, permissions, logging, and rollout decisions.',
+          'Identity links every agent action to a human, team, service account, or approved workflow.',
+          'Policy and observability make agent behavior enforceable, auditable, and improvable.',
+        ],
         sections: [
           {
             kind: 'text',
@@ -531,7 +567,11 @@ description: Turn receipt files into a draft expense report. Use for receipts, r
           'Define evals and regression tests for agents.',
           'Plan incident response and rollback.',
         ],
-        keyConcepts: ['rollout', 'evals', 'regression testing', 'incident response'],
+        keyConcepts: [
+          'Rollout should move from prototypes to pilots to production with increasing controls.',
+          'Evals and regression tests catch workflow failures before agents touch important systems.',
+          'Incident response needs owners, logs, rollback paths, and a way to disable unsafe automation.',
+        ],
         sections: [
           {
             kind: 'implementationLab',
@@ -585,7 +625,11 @@ description: Turn receipt files into a draft expense report. Use for receipts, r
           'Balance ambition with risk controls.',
           'Explain personal workstation and enterprise strategy together.',
         ],
-        keyConcepts: ['CTO hiring bar', 'architecture judgment', 'risk', 'rollout'],
+        keyConcepts: [
+          'A CTO-level answer frames agents as systems with context, tools, permissions, evals, and ownership.',
+          'Architecture judgment means choosing the simplest harness and control model that fits the job.',
+          'Risk discussion should include approval gates, auditability, rollout sequence, and failure handling.',
+        ],
         sections: [
           ctoRubricSection(
             'CTO hiring bar',
@@ -620,7 +664,11 @@ description: Turn receipt files into a draft expense report. Use for receipts, r
           'Describe vendor and marketplace risk.',
           'Create an approval model for skills, plugins, MCPs, and connectors.',
         ],
-        keyConcepts: ['build vs buy', 'vendor risk', 'marketplace governance', 'connectors'],
+        keyConcepts: [
+          'Build vs buy decisions should weigh differentiation, operating burden, integration depth, and risk.',
+          'Vendor risk includes data access, lock-in, roadmap dependency, compliance, and incident response.',
+          'Marketplace governance decides which skills, plugins, connectors, and MCPs can enter the environment.',
+        ],
         sections: [
           ctoRubricSection(
             'Interview prompt: marketplace governance',

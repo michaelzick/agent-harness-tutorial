@@ -794,7 +794,11 @@ function buildIntroLesson(profile: HarnessWorkflowProfile): LessonInput {
       'Separate draft generation from human approval.',
       `Create a reusable ${profile.workflowArtifact} instead of a one-off prompt.`,
     ],
-    keyConcepts: [profile.workflowArtifact, 'review gate', 'operator checklist', 'weekly improvement'],
+    keyConcepts: [
+      `The reusable ${profile.workflowArtifact} is the source of truth for how ${meta.title} should run the workflow.`,
+      'The review gate separates draft generation from outreach, posting, record writes, or other live actions.',
+      'The operator checklist keeps every run tied to inputs, outputs, owner, stop conditions, and weekly improvement.',
+    ],
     sections: [
       workflowGuide({
         kind: 'workflowGuide',
@@ -867,7 +871,11 @@ function buildBusinessLesson(profile: HarnessWorkflowProfile, theme: BusinessWor
       'Collect the minimum inputs needed before drafting follow-up.',
       'Keep approval before outreach and improve the workflow from weekly evidence.',
     ],
-    keyConcepts: [theme.shortTitle, profile.workflowArtifact, 'approval gate', 'weekly review'],
+    keyConcepts: [
+      `The ${theme.shortTitle} should start from approved inputs before ${meta.title} drafts or prepares follow-up.`,
+      `The ${profile.workflowArtifact} keeps the process reusable instead of relying on a one-off prompt.`,
+      'The approval gate must happen before outreach, publishing, CRM writes, or any customer-facing action.',
+    ],
     sections: [
       workflowGuide({
         kind: 'workflowGuide',

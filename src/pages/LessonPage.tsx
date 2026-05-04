@@ -16,7 +16,6 @@ import { GoodBadExample } from '../components/GoodBadExample'
 import { KeyConceptCallout } from '../components/KeyConceptCallout'
 import { MistakeCallout } from '../components/MistakeCallout'
 import { CapstoneProject } from '../components/CapstoneProject'
-import { Checkpoint } from '../components/Checkpoint'
 import { SetupGuide } from '../components/SetupGuide'
 import { FeatureMatrix } from '../components/FeatureMatrix'
 import { SkillRecipe } from '../components/SkillRecipe'
@@ -37,17 +36,13 @@ type TocItem = { title: string; slug: string }
 export function LessonPage({
   course,
   completed,
-  checkpointResults,
   onVisit,
   onComplete,
-  onCheckpoint,
 }: {
   course: Course
   completed: Set<string>
-  checkpointResults: Record<string, boolean>
   onVisit: (lessonId: string) => void
   onComplete: (lessonId: string) => void
-  onCheckpoint: (checkpointId: string, isCorrect: boolean) => void
 }) {
   const { moduleSlug, lessonSlug } = useParams()
   const ref = findLessonRef(course, moduleSlug, lessonSlug)
@@ -205,9 +200,7 @@ export function LessonPage({
             moduleProgressDone={moduleProgressDone}
             moduleLessonCount={moduleLessons.length}
             isComplete={isComplete}
-            checkpointResult={checkpointResults[lesson.checkpoint.id]}
             onComplete={onComplete}
-            onCheckpoint={onCheckpoint}
           />
         </aside>
       </div>
@@ -225,9 +218,7 @@ export function LessonPage({
           moduleProgressDone={moduleProgressDone}
           moduleLessonCount={moduleLessons.length}
           isComplete={isComplete}
-          checkpointResult={checkpointResults[lesson.checkpoint.id]}
           onComplete={onComplete}
-          onCheckpoint={onCheckpoint}
           onNavigate={closeOutline}
         />
       </MobileDrawer>
@@ -242,9 +233,7 @@ function LessonSideContents({
   moduleProgressDone,
   moduleLessonCount,
   isComplete,
-  checkpointResult,
   onComplete,
-  onCheckpoint,
   onNavigate,
 }: {
   lesson: Lesson
@@ -253,26 +242,13 @@ function LessonSideContents({
   moduleProgressDone: number
   moduleLessonCount: number
   isComplete: boolean
-  checkpointResult: boolean | undefined
   onComplete: (lessonId: string) => void
-  onCheckpoint: (checkpointId: string, isCorrect: boolean) => void
   onNavigate?: () => void
 }) {
   return (
     <>
       {tocItems.length > 0 && (
         <LessonToc key={lesson.id} items={tocItems} onNavigate={onNavigate} />
-      )}
-
-      {lesson.keyConcepts.length > 0 && (
-        <div className="side-rail-block">
-          <div className="side-rail-label">Key concepts</div>
-          <div className="tag-list">
-            {lesson.keyConcepts.map((concept) => (
-              <span key={concept}>{concept}</span>
-            ))}
-          </div>
-        </div>
       )}
 
       <div className="side-rail-block">
@@ -289,11 +265,18 @@ function LessonSideContents({
         </button>
       </div>
 
-      <Checkpoint
-        checkpoint={lesson.checkpoint}
-        savedResult={checkpointResult}
-        onAnswer={(isCorrect) => onCheckpoint(lesson.checkpoint.id, isCorrect)}
-      />
+      {lesson.keyConcepts.length > 0 && (
+        <section className="side-rail-block key-concepts-card" aria-labelledby={`key-concepts-${lesson.id}`}>
+          <div id={`key-concepts-${lesson.id}`} className="side-rail-label">Key concepts</div>
+          <div className="key-concept-list" aria-label="Key concepts">
+            {lesson.keyConcepts.map((concept) => (
+              <div className="key-concept-square" key={concept}>
+                {concept}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </>
   )
 }
