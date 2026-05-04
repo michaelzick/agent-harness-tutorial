@@ -45,7 +45,7 @@ export function MobileDrawer({
       }
     }
 
-    const desktopQuery = window.matchMedia('(min-width: 881px)')
+    const desktopQuery = window.matchMedia('(min-width: 1181px)')
     function handleDesktopChange(event: MediaQueryListEvent) {
       if (event.matches) {
         onClose()
