@@ -34,3 +34,9 @@ The parser is defensive: empty, stale, or malformed storage falls back to safe d
 ## Design Notes
 
 The UI is intentionally dark-ish: slate and charcoal surfaces, subtle borders, restrained accents, no decorative effects, and no color gradients.
+
+## Hosting
+
+Cloudflare Worker `zickonezero-aht` serves https://aht.zickonezero.com from `dist/`.
+`wrangler.jsonc` preserves SPA deep links. Workers Builds deploys GitHub `main`
+with Node 24, `npm run build`, and `npx wrangler@4.133.0 deploy`.
