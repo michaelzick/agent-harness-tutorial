@@ -129,6 +129,10 @@ npm run agent-briefs:check  # Fail if CLAUDE.md or GEMINI.md drift from AGENTS.m
 
 No change is done until `npm run lint` and `npm run check` pass. When structural or meaningful project facts change, update `AGENTS.md`, run `npm run agent-briefs:sync`, and keep `CLAUDE.md` / `GEMINI.md` in lockstep.
 
+## Hosting
+
+Cloudflare Worker `zickonezero-aht` serves `https://aht.zickonezero.com`. Root `wrangler.jsonc` publishes `dist/` with single-page-application fallback so direct links reach React Router. Workers Builds uses GitHub `main`, Node 24, `npm run build`, and `npx wrangler@4.133.0 deploy`. The app remains frontend-only and needs no deployment secrets.
+
 ## 8. Conventions & code style
 
 - **File naming:** PascalCase for React component files (`LessonCard.tsx`, `CourseLayout.tsx`); camelCase for data, utility, and hook files (`courseNavigation.ts`, `useProgress.ts`).
