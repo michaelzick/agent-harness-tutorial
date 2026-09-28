@@ -40,3 +40,14 @@ The UI is intentionally dark-ish: slate and charcoal surfaces, subtle borders, r
 Cloudflare Worker `zickonezero-aht` serves https://aht.zickonezero.com from `dist/`.
 `wrangler.jsonc` preserves SPA deep links. Workers Builds deploys GitHub `main`
 with Node 24, `npm run build`, and `npx wrangler@4.133.0 deploy`.
+
+### Branch previews
+
+Workers Builds builds every non-production branch with Node 24 and `npm run build`,
+then runs `npx wrangler@4.135.0 preview` (Wrangler 4.135.0 or later). The empty
+`previews` block in `wrangler.jsonc` enables isolated branch previews; static assets
+and routing settings remain at the top level. Each branch has a stable preview URL
+that updates on subsequent pushes. Production continues to deploy from `main`.
+
+For branches created before this configuration was added, merge current `main`
+before pushing to get a working preview build.
