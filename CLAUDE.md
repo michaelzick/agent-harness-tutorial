@@ -131,7 +131,7 @@ No change is done until `npm run lint` and `npm run check` pass. When structural
 
 ## Hosting
 
-Cloudflare Worker `zickonezero-aht` serves `https://aht.zickonezero.com`. Root `wrangler.jsonc` publishes `dist/` with single-page-application fallback so direct links reach React Router. Workers Builds uses GitHub `main`, Node 24, `npm run build`, and `npx wrangler@4.133.0 deploy`. The app remains frontend-only and needs no deployment secrets.
+Cloudflare Worker `zickonezero-aht` serves `https://aht.zickonezero.com`. Root `wrangler.jsonc` publishes `dist/` with single-page-application fallback so direct links reach React Router. Workers Builds uses GitHub `main`, Node 24, `npm run build`, and `npx wrangler@4.133.0 deploy`. Non-production branches build with Node 24 and `npm run build`, then use `npx wrangler@4.135.0 preview` for a stable branch URL. The required empty `previews` block keeps previews isolated while reusing top-level static asset settings. Older branches must incorporate this configuration before preview builds can succeed. The app remains frontend-only and needs no deployment secrets.
 
 ## 8. Conventions & code style
 
